@@ -1,0 +1,462 @@
+.road_wrap {
+    -webkit-animation: ani_slide_road_wrap linear 4s;
+    -moz-animation: ani_slide_road_wrap linear 4s;
+    -ms-animation: ani_slide_road_wrap linear 4s;
+    -o-animation: ani_slide_road_wrap linear 4s;
+    animation: ani_slide_road_wrap linear 4s;
+}
+#road {
+    -webkit-animation: ani_slide_road linear 4s;
+    -moz-animation: ani_slide_road linear 4s;
+    -ms-animation: ani_slide_road linear 4s;
+    -o-animation: ani_slide_road linear 4s;
+    animation: ani_slide_road linear 4s;
+}
+#grass {
+    -webkit-animation: ani_slide_grass linear 4s;
+    -moz-animation: ani_slide_grass linear 4s;
+    -ms-animation: ani_slide_grass linear 4s;
+    -o-animation: ani_slide_grass linear 4s;
+    animation: ani_slide_grass linear 4s;
+}
+#birds_1 { 
+    -webkit-animation: ani_slide linear 4s;
+    -moz-animation: ani_slide linear 4s;
+    -ms-animation: ani_slide linear 4s;
+    -o-animation: ani_slide linear 4s;
+    animation: ani_slide linear 4s;
+}
+#birds_2 {
+    -webkit-animation: ani_slide_3 linear 4s;
+    -moz-animation: ani_slide_3 linear 4s;
+    -ms-animation: ani_slide_3 linear 4s;
+    -o-animation: ani_slide_3 linear 4s;
+    animation: ani_slide_3 linear 4s;
+}
+#mountain_2 {
+    -webkit-animation: ani_slide_mountain linear 4s;
+    -moz-animation: ani_slide_mountain linear 4s;
+    -ms-animation: ani_slide_mountain linear 4s;
+    -o-animation: ani_slide_mountain linear 4s;
+    animation: ani_slide_mountain linear 4s;
+}
+#mountain_1 {
+    -webkit-animation: ani_slide_1 linear 4s;
+    -moz-animation: ani_slide_1 linear 4s;
+    -ms-animation: ani_slide_1 linear 4s;
+    -o-animation: ani_slide_1 linear 4s;
+    animation: ani_slide_1 linear 4s;
+}
+#clouds_1 {
+    -webkit-animation: ani_slide_3 linear 4s;
+    -moz-animation: ani_slide_3 linear 4s;
+    -ms-animation: ani_slide_3 linear 4s;
+    -o-animation: ani_slide_3 linear 4s;
+    animation: ani_slide_3 linear 4s;
+}
+#clouds_2 {
+    -webkit-animation: ani_slide linear 4s;
+    -moz-animation: ani_slide linear 4s;
+    -ms-animation: ani_slide linear 4s;
+    -o-animation: ani_slide linear 4s;
+    animation: ani_slide linear 4s;
+}
+#clouds_3 {
+    -webkit-animation: ani_slide_2 linear 4s;
+    -moz-animation: ani_slide_2 linear 4s;
+    -ms-animation: ani_slide_2 linear 4s;
+    -o-animation: ani_slide_2 linear 4s;
+    animation: ani_slide_2 linear 4s;
+}
+#clouds_4 {
+    -webkit-animation: ani_slide linear 4s;
+    -moz-animation: ani_slide linear 4s;
+    -ms-animation: ani_slide linear 4s;
+    -o-animation: ani_slide linear 4s;
+    animation: ani_slide linear 4s;
+}
+#wheel_1 {   
+    -webkit-animation: ani_appear_rotate_1 ease-in 4s;
+    -moz-animation: ani_appear_rotate_1 ease-in 4s;
+    -ms-animation: ani_appear_rotate_1 ease-in 4s;
+    -o-animation: ani_appear_rotate_1 ease-in 4s;
+    animation: ani_appear_rotate_1 ease-in 4s;
+}
+#wheel_2{
+   -webkit-animation: ani_appear_rotate_2 ease-in 4s;
+    -moz-animation: ani_appear_rotate_2 ease-in 4s;
+    -ms-animation: ani_appear_rotate_2 ease-in 4s;
+    -o-animation: ani_appear_rotate_2 ease-in 4s;
+    animation: ani_appear_rotate_2 ease-in 4s;
+}
+
+/* animation for the beginning */
+#bicycleWrap {
+    -webkit-animation: ani_appear linear 4s;
+    -moz-animation: ani_appear linear 4s;
+    -ms-animation: ani_appear linear 4s;
+    -o-animation: ani_appear linear 4s;
+    animation: ani_appear linear 4s;
+}
+
+@-webkit-keyframes ani_appear {
+    0% { left:-45%; -webkit-transform:perspective(300px) rotateZ(8deg); margin-top:5%; }
+    25% { left:0%; -webkit-transform:perspective(300px) rotateZ(-8deg); margin-top:7.5%; }
+    75% { left:5%; -webkit-transform:perspective(300px) rotateZ(-8deg); margin-top:7.5%; }
+    100% { left:100%; -webkit-transform:perspective(300px) rotateZ(-16deg); margin-top:7.5%; }
+}
+
+@-webkit-keyframes ani_appear_rotate_1 {
+    0% { -webkit-transform:scale(0.8) rotateY(4deg) rotate(0deg); }
+    25% { -webkit-transform:scale(0.8) rotateY(4deg) rotate(360deg); }
+    75% { -webkit-transform:scale(0.8) rotateY(4deg) rotate(480deg); }
+    100% { -webkit-transform:scale(0.8) rotateY(4deg) rotate(900deg); }
+}
+
+@-webkit-keyframes ani_appear_rotate_2 {
+    0% { -webkit-transform:scale(0.7) rotateY(4deg) rotate(0deg); }
+    25% { -webkit-transform:scale(0.7) rotateY(4deg) rotate(360deg); }
+    75% { -webkit-transform:scale(0.7) rotateY(4deg) rotate(480deg); }
+    100% { -webkit-transform:scale(0.7) rotateY(4deg) rotate(900deg); }
+}
+
+@-webkit-keyframes ani_slide {
+    0% { margin-left:5%; }
+    25% { margin-left:3%; }
+    75% { margin-left:2%; }
+    100% { margin-left:0%; }
+}
+
+@-webkit-keyframes ani_slide_1 {
+    0% { margin-left:3%; margin-top: 9%; }
+    25% { margin-left:1.5%; margin-top: 9%; }
+    75% { margin-left:1%; margin-top: 9%; }
+    100% { margin-left:0%; margin-top: 13%; }
+}
+
+@-webkit-keyframes ani_slide_2 {
+    0% { margin-left:10%; }
+    25% { margin-left:6%; }
+    75% { margin-left:5%; }
+    100% { margin-left:0%; }
+}
+
+@-webkit-keyframes ani_slide_3 {
+    0% { margin-left:15%; }
+    25% { margin-left:10%; }
+    75% { margin-left:8%; }
+    100% { margin-left:0%; }
+}
+
+@-webkit-keyframes ani_slide_mountain {
+    0% { margin-left:5%; margin-top:18%; }
+    25% { margin-left:3%; margin-top:18%; }
+    75% { margin-left:2%; margin-top:18%; }
+    100% { margin-left:0%; margin-top:25%; }
+}
+
+@-webkit-keyframes ani_slide_grass {
+    0% { margin-top:15%; }
+    25% { margin-top:15%; }
+    75% { margin-top:15%; }
+    100% { margin-top:25%; }
+}
+
+@-webkit-keyframes ani_slide_road {
+    0% { margin-top:24%; }
+    25% { margin-top:24%; }
+    75% { margin-top:24%; }
+    100% { margin-top:32%; }
+}
+
+@-webkit-keyframes ani_slide_road_wrap {
+    0% { margin-top:32%; }
+    25% { margin-top:32%; }
+    75% { margin-top:32%; }
+    95% { margin-top:32%; }
+    100% { margin-top:41%;  }
+}
+
+@-moz-keyframes ani_appear {
+    0% { left:-45%; -moz-transform:perspective(300px) rotateZ(8deg); margin-top:5%; }
+    25% { left:0%; -moz-transform:perspective(300px) rotateZ(-8deg); margin-top:7.5%; }
+    75% { left:5%; -moz-transform:perspective(300px) rotateZ(-8deg); margin-top:7.5%; }
+    100% { left:100%; -moz-transform:perspective(300px) rotateZ(-16deg); margin-top:7.5%; }
+}
+
+@-moz-keyframes ani_appear_rotate_1 {
+    0% { -moz-transform:scale(0.8) rotateY(4deg) rotate(0deg); }
+    25% { -moz-transform:scale(0.8) rotateY(4deg) rotate(360deg); }
+    75% { -moz-transform:scale(0.8) rotateY(4deg) rotate(480deg); }
+    100% { -moz-transform:scale(0.8) rotateY(4deg) rotate(900deg); }
+}
+
+@-moz-keyframes ani_appear_rotate_2 {
+    0% { -moz-transform:scale(0.7) rotateY(4deg) rotate(0deg); }
+    25% { -moz-transform:scale(0.7) rotateY(4deg) rotate(360deg); }
+    75% { -moz-transform:scale(0.7) rotateY(4deg) rotate(480deg); }
+    100% { -moz-transform:scale(0.7) rotateY(4deg) rotate(900deg); }
+}
+
+@-moz-keyframes ani_slide {
+    0% { margin-left:5%; }
+    25% { margin-left:3%; }
+    75% { margin-left:2%; }
+    100% { margin-left:0%; }
+}
+
+@-moz-keyframes ani_slide_1 {
+    0% { margin-left:3%; margin-top: 9%; }
+    25% { margin-left:1.5%; margin-top: 9%; }
+    75% { margin-left:1%; margin-top: 9%; }
+    100% { margin-left:0%; margin-top: 13%; }
+}
+
+@-moz-keyframes ani_slide_2 {
+    0% { margin-left:10%; }
+    25% { margin-left:6%; }
+    75% { margin-left:5%; }
+    100% { margin-left:0%; }
+}
+
+@-moz-keyframes ani_slide_3 {
+    0% { margin-left:15%; }
+    25% { margin-left:10%; }
+    75% { margin-left:8%; }
+    100% { margin-left:0%; }
+}
+
+@-moz-keyframes ani_slide_mountain {
+    0% { margin-left:5%; margin-top:18%; }
+    25% { margin-left:3%; margin-top:18%; }
+    75% { margin-left:2%; margin-top:18%; }
+    100% { margin-left:0%; margin-top:25%; }
+}
+
+@-moz-keyframes ani_slide_grass {
+    0% { margin-top:15%; }
+    25% { margin-top:15%; }
+    75% { margin-top:15%; }
+    100% { margin-top:25%; }
+}
+
+@-moz-keyframes ani_slide_road {
+    0% { margin-top:24%; }
+    25% { margin-top:24%; }
+    75% { margin-top:24%; }
+    100% { margin-top:32%; }
+}
+
+@-moz-keyframes ani_slide_road_wrap {
+    0% { margin-top:32%; }
+    25% { margin-top:32%; }
+    75% { margin-top:32%; }
+    95% { margin-top:32%; }
+    100% { margin-top:41%;  }
+}
+
+@-ms-keyframes ani_appear {
+    0% { left:-45%; -ms-transform:perspective(300px) rotateZ(8deg); margin-top:5%; }
+    25% { left:0%; -ms-transform:perspective(300px) rotateZ(-8deg); margin-top:7.5%; }
+    75% { left:5%; -ms-transform:perspective(300px) rotateZ(-8deg); margin-top:7.5%; }
+    100% { left:100%; -ms-transform:perspective(300px) rotateZ(-16deg); margin-top:7.5%; }
+}
+
+@-ms-keyframes ani_appear_rotate_1 {
+    0% { -ms-transform:scale(0.8) rotateY(4deg) rotate(0deg); }
+    25% { -ms-transform:scale(0.8) rotateY(4deg) rotate(360deg); }
+    75% { -ms-transform:scale(0.8) rotateY(4deg) rotate(480deg); }
+    100% { -ms-transform:scale(0.8) rotateY(4deg) rotate(900deg); }
+}
+
+@-ms-keyframes ani_appear_rotate_2 {
+    0% { -ms-transform:scale(0.7) rotateY(4deg) rotate(0deg); }
+    25% { -ms-transform:scale(0.7) rotateY(4deg) rotate(360deg); }
+    75% { -ms-transform:scale(0.7) rotateY(4deg) rotate(480deg); }
+    100% { -ms-transform:scale(0.7) rotateY(4deg) rotate(900deg); }
+}
+
+@-ms-keyframes ani_slide {
+    0% { margin-left:5%; }
+    25% { margin-left:3%; }
+    75% { margin-left:2%; }
+    100% { margin-left:0%; }
+}
+
+@-ms-keyframes ani_slide_1 {
+    0% { margin-left:3%; margin-top: 9%; }
+    25% { margin-left:1.5%; margin-top: 9%; }
+    75% { margin-left:1%; margin-top: 9%; }
+    100% { margin-left:0%; margin-top: 13%; }
+}
+
+@-ms-keyframes ani_slide_2 {
+    0% { margin-left:10%; }
+    25% { margin-left:6%; }
+    75% { margin-left:5%; }
+    100% { margin-left:0%; }
+}
+
+@-ms-keyframes ani_slide_3 {
+    0% { margin-left:15%; }
+    25% { margin-left:10%; }
+    75% { margin-left:8%; }
+    100% { margin-left:0%; }
+}
+
+@-ms-keyframes ani_slide_mountain {
+    0% { margin-left:5%; margin-top:18%; }
+    25% { margin-left:3%; margin-top:18%; }
+    75% { margin-left:2%; margin-top:18%; }
+    100% { margin-left:0%; margin-top:25%; }
+}
+
+@-ms-keyframes ani_slide_grass {
+    0% { margin-top:15%; }
+    25% { margin-top:15%; }
+    75% { margin-top:15%; }
+    100% { margin-top:25%; }
+}
+
+@-ms-keyframes ani_slide_road {
+    0% { margin-top:24%; }
+    25% { margin-top:24%; }
+    75% { margin-top:24%; }
+    100% { margin-top:32%; }
+}
+
+@-ms-keyframes ani_slide_road_wrap {
+    0% { margin-top:32%; }
+    25% { margin-top:32%; }
+    75% { margin-top:32%; }
+    95% { margin-top:32%; }
+    100% { margin-top:41%;  }
+}
+
+@-o-keyframes ani_appear_rotate_2 {
+    0% { -o-transform:scale(0.7) rotateY(4deg) rotate(0deg); }
+    25% { -o-transform:scale(0.7) rotateY(4deg) rotate(360deg); }
+    75% { -o-transform:scale(0.7) rotateY(4deg) rotate(480deg); }
+    100% { -o-transform:scale(0.7) rotateY(4deg) rotate(900deg); }
+}
+
+@-o-keyframes ani_slide {
+    0% { margin-left:5%; }
+    25% { margin-left:3%; }
+    75% { margin-left:2%; }
+    100% { margin-left:0%; }
+}
+
+@-o-keyframes ani_slide_1 {
+    0% { margin-left:3%; margin-top: 9%; }
+    25% { margin-left:1.5%; margin-top: 9%; }
+    75% { margin-left:1%; margin-top: 9%; }
+    100% { margin-left:0%; margin-top: 13%; }
+}
+
+@-o-keyframes ani_slide_2 {
+    0% { margin-left:10%; }
+    25% { margin-left:6%; }
+    75% { margin-left:5%; }
+    100% { margin-left:0%; }
+}
+
+@-o-keyframes ani_slide_3 {
+    0% { margin-left:15%; }
+    25% { margin-left:10%; }
+    75% { margin-left:8%; }
+    100% { margin-left:0%; }
+}
+
+@-o-keyframes ani_slide_mountain {
+    0% { margin-left:5%; margin-top:18%; }
+    25% { margin-left:3%; margin-top:18%; }
+    75% { margin-left:2%; margin-top:18%; }
+    100% { margin-left:0%; margin-top:25%; }
+}
+
+@-o-keyframes ani_slide_grass {
+    0% { margin-top:15%; }
+    25% { margin-top:15%; }
+    75% { margin-top:15%; }
+    100% { margin-top:25%; }
+}
+
+@-o-keyframes ani_slide_road {
+    0% { margin-top:24%; }
+    25% { margin-top:24%; }
+    75% { margin-top:24%; }
+    100% { margin-top:32%; }
+}
+
+@-o-keyframes ani_slide_road_wrap {
+    0% { margin-top:32%; }
+    25% { margin-top:32%; }
+    75% { margin-top:32%; }
+    95% { margin-top:32%; }
+    100% { margin-top:41%;  }
+}
+
+@keyframes ani_appear_rotate_2 {
+    0% { transform:scale(0.7) rotateY(4deg) rotate(0deg); }
+    25% { transform:scale(0.7) rotateY(4deg) rotate(360deg); }
+    75% { transform:scale(0.7) rotateY(4deg) rotate(480deg); }
+    100% { transform:scale(0.7) rotateY(4deg) rotate(900deg); }
+}
+
+@keyframes ani_slide {
+    0% { margin-left:5%; }
+    25% { margin-left:3%; }
+    75% { margin-left:2%; }
+    100% { margin-left:0%; }
+}
+
+@keyframes ani_slide_1 {
+    0% { margin-left:3%; margin-top: 9%; }
+    25% { margin-left:1.5%; margin-top: 9%; }
+    75% { margin-left:1%; margin-top: 9%; }
+    100% { margin-left:0%; margin-top: 13%; }
+}
+
+@keyframes ani_slide_2 {
+    0% { margin-left:10%; }
+    25% { margin-left:6%; }
+    75% { margin-left:5%; }
+    100% { margin-left:0%; }
+}
+
+@keyframes ani_slide_3 {
+    0% { margin-left:15%; }
+    25% { margin-left:10%; }
+    75% { margin-left:8%; }
+    100% { margin-left:0%; }
+}
+
+@keyframes ani_slide_mountain {
+    0% { margin-left:5%; margin-top:18%; }
+    25% { margin-left:3%; margin-top:18%; }
+    75% { margin-left:2%; margin-top:18%; }
+    100% { margin-left:0%; margin-top:25%; }
+}
+
+@keyframes ani_slide_grass {
+    0% { margin-top:15%; }
+    25% { margin-top:15%; }
+    75% { margin-top:15%; }
+    100% { margin-top:25%; }
+}
+
+@keyframes ani_slide_road {
+    0% { margin-top:24%; }
+    25% { margin-top:24%; }
+    75% { margin-top:24%; }
+    100% { margin-top:32%; }
+}
+
+@keyframes ani_slide_road_wrap {
+    0% { margin-top:32%; }
+    25% { margin-top:32%; }
+    75% { margin-top:32%; }
+    95% { margin-top:32%; }
+    100% { margin-top:41%;  }
+}
