@@ -1,4 +1,5 @@
 yarmyarch.com
 =============
 
-personal blog
+Personal blog template of wordpress.
+View it here: http://yarmyarch.com
