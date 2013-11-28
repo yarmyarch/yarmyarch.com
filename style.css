@@ -102,13 +102,14 @@ applet {
     font-size:0.8em; 
     color:transparent;
     color:#e8e8e8\0;
-    text-shadow:0px 0px 4px #FFF;
+    text-shadow:0px 0px 4px #000;
     opacity:0;
     
     transition:opacity 0.2s linear, color 0.2s linear;
 }
 #copyRight:hover { 
     color:#FFF;
+    text-shadow:0px 0px 4px #000;
 }
 #copyRight.active {
     opacity:1;

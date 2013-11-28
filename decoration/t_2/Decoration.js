@@ -522,6 +522,9 @@ var Decoration = (function(){
         
         baseTimeFrame : 0,
         
+        // used to prevent too frequent refresh.
+        lastTick : 0,
+        
         scrollTop : 0
     };
     
@@ -794,7 +797,13 @@ var Decoration = (function(){
                 nextTimeFrame,
                 frameRange,
                 values = [],
-                tmpValue;
+                tmpValue,
+                curTick;
+            
+            // prevent too frequent refresh
+            curTick = +new Date();
+            if (curTick - _buf.lastTick <= _lc.LEAST_INTERVAL * 1.2) return;
+            _buf.lastTick = curTick;
             
             if (!_buf.baseTimeFrame) _buf.baseTimeFrame = frame;
             lastTimeFrame = Math.floor((frame - _buf.baseTimeFrame) % 12000 / 3000) * 3000;

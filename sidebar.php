@@ -22,7 +22,8 @@
         // current post, if post id then given post, or the first post in each group.
         preg_match("/\d{4}-\d{2}/", $post->post_date, $group);
         $group = $group[0];
-        $category = get_the_category($post->ID)[0];
+        $category = $globalUtils->getPostCategory($postId);
+        if (is_array($category)) $category = $category[0];
         
         if (!isset($layeredMenu[$category->slug])) {
             $layeredMenu[$category->slug] = array(
