@@ -397,7 +397,12 @@ return self = {
             //~ _util.getElementById("show").style.display = "block";
             
             // load signature
-            controller.initImages({signature : tmpRoot + "imgs/bg.png"});
+            controller.initImages({
+                signature : tmpRoot + "imgs/bg.png"
+                //~ h_bicycle : tmpRoot + "decoration/t_1/imgs/cycle.png",
+                //~ h_wheel_1 : tmpRoot + "decoration/t_1/imgs/wheel.png",
+                //~ h_wheel_2 : tmpRoot + "decoration/t_1/imgs/wheel.png"
+            });
             
             // show the posts and other page-related stuff here.
             setTimeout(function() {

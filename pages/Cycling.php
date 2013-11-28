@@ -17,7 +17,9 @@ get_header();?>
         }
     ?>
     </div>
-    <?php get_sidebar(); ?>
+    <?php 
+        include(dirname(__FILE__)."/../sidebar.php");
+    ?>
     <div class="clear"></div>
 </div>
 

@@ -30,11 +30,11 @@ $yarController = new YarController();
 
 // TODO:
 // ###### «»︽
-// get_user_meta(id, "avatar") : the meta info should be set if the user succeed using a social login.
 // how to locate permalink to each article?
 
 // after verified : 
 // templateFilter, normalHeaderAction;
-// page, showloading
+
+// in sidebar.php, handle postid.
 
 ?>

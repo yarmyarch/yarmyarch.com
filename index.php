@@ -4,7 +4,6 @@ get_header();?>
 <div class="content" id="content">
     <div class="article-wrap">
     <?php
-    
         // should generate posts in all categories with ajax, and a main picture at the home page.
         $posts = get_posts(array('category__not_in' => array($globalUtils->getCategoryBySlug("talking")->term_id)));
         foreach($posts as $post) {
@@ -12,7 +11,9 @@ get_header();?>
         }
     ?>
     </div>
-    <?php get_sidebar(); ?>
+    <?php 
+        include(dirname(__FILE__)."/sidebar.php");
+    ?>
     <div class="clear"></div>
 </div>
     
