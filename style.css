@@ -142,7 +142,12 @@ applet {
     */
     box-shadow: 0px 0px 36px #999;
 }
-.article_action_wrap { position:relative; }
+.article_action_wrap { 
+    position: relative;
+    border-top: 1px solid #ccc;
+    margin-top: 2%;
+    padding-top: 1%;
+}
 .article_action_wrap .loading { min-height:36px; background-color:#efefef; z-index:1000; display:none; }
 .img img, .comment_avatar img { width:100%; margin:12px 0; }
 
