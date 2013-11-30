@@ -2,7 +2,19 @@
     $postId = $post->ID;
     $category = $globalUtils->getPostCategory($postId);
 ?>
-<div class="article arcitle_category_<?php echo $category->term_id; ?>" id="arcitleCategory_<?php echo $postId; ?>">
+<div class="article arcitle_category_<?php echo $category->slug; ?>" id="arcitleCategory_<?php echo $postId; ?>">
+    <div class="article_title" id="articleTitle_<?php echo $postId; ?>">
+        <img class="article_title_img" src="<?php echo get_template_directory_uri(); ?>/imgs/cat/<?php echo $category->slug; ?>.jpg" />
+        <?php
+            $title = apply_filters("the_title ", $post->post_title);
+        ?>
+        <a class="article_title_link" href="<?php echo get_permalink($post->ID); ?>" title="<?php echo $title; ?>" onclick="javascript:return false;"><?php echo $title; ?></a>
+        <div class="article_date">
+        <?php
+            echo apply_filters("the_title ", $post->post_date_gmt);
+        ?>
+        </div>
+    </div>
     <?php
         $content = $post->post_content;
         $content = apply_filters('the_content', $content);
