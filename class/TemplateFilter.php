@@ -302,10 +302,16 @@ class TemplateFilter {
         return $result;
     }
     
+    /**
+     * This function will be used for cases that not an email required for api-logged users, see also function apiLogin.
+     */
     public function ignoreSessionEmail($email) {
         
         $user = wp_get_current_user();
-        if (strstr($user->user_email, get_user_meta($user->ID, "privateId", true))) {
+        
+        $privateId = get_user_meta($user->ID, "privateId", true);
+        
+        if (!empty($privateId) && strstr($user->user_email, $privateId)) {
             $email = "";
         }
         return $email;

@@ -1,6 +1,8 @@
 body{ margin:0; padding:0; font-size:1em; font-family:微软雅黑; }
 .clear { height:0; border:0; padding:0; margin:0; line-height:0; clear:both; }
 a { text-decoration:none; }
+a:hover { text-decoration:none; }
+a:active { text-decoration:none; }
 applet { 
     -webkit-transform:scale(0.1); 
     -moz-transform:scale(0.1); 
@@ -573,7 +575,7 @@ applet {
 .sidebar {
     width:35.25%; 
     float:right;
-    padding: 24px 48px;
+    padding: 24px 0;
     background:#fff;
     z-index:0;
     margin-top:-16px;
@@ -596,8 +598,8 @@ applet {
     width: 100%;
     display: block;
     position: relative;
-    height: 32px;
-    line-height: 32px;    
+    height: 36px;
+    line-height: 36px;
     white-space: nowrap;
     color: #333;
     z-index:0;
@@ -626,7 +628,7 @@ applet {
 }
 .side_post_link:after {     
     content: "";
-    top: 2px;
+    top: 6px;
     position: absolute;
     border-right: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
@@ -642,16 +644,36 @@ applet {
     -o-transform: rotate(-45deg);
     transform: rotate(-45deg);
 }
-.side_post_link:hover:after {
+.side_post_link:hover:after, .side_post_link.active:after {
     background:#efefef;
     right: -13px;
 }
-.side_post_link:hover {
+.side_post_link:hover, .side_post_link.active:hover {
     color: rgb(80,192,255);
 }
-.side_post_link:hover:before {
+.side_post_link:hover:before, .side_post_link.active:before {
     width:100%;
     background:#efefef;
+}
+
+.side_menu_category:active {
+    text-decoration: none;
+}
+.side_menu_category {
+    font-size: 1.6em;
+    line-height:2em;
+    margin-left: 2%;
+    display: block;
+}
+.side_menu_group {
+    display: block;
+    line-height: 1.6em;
+    font-size: 1.3em;
+    margin-left:4%;
+}
+.side_menu_posts {    
+    width: 86%;
+    margin: 0 auto;
 }
 /* end css for sidebar */
 
@@ -1051,7 +1073,7 @@ applet {
         line-height: 110%;
     }
     .article { padding: 40px 40px 20px 40px; }
-    .sidebar { padding: 20px 40px; }
+    .sidebar { padding: 20px 0; }
     .sidebar.active { margin-top: 20px; }
     /**
      * conflicts with the reflection.
@@ -1113,12 +1135,12 @@ applet {
     */
     
     .article { padding: 24px 24px 12px 24px; }
-    .sidebar { padding: 12px 24px; }
+    .sidebar { padding: 12px 0; }
     .sidebar.active { margin-top: 12px; }
     
     .side_post_link:hover:after {
         background:#efefef;
-        right: -11px;
+        right: -13px;
     }
 }
 
@@ -1290,14 +1312,14 @@ applet {
     }
     
     .article { padding: 12px 12px 6px 12px; }
-    .sidebar { padding: 6px 12px; }
+    .sidebar { padding: 6px 0; }
     .sidebar.active { margin-top: 6px; }
     
     .side_post_link {
          height:24px; line-height:24px;
     }
     .side_post_link:after {
-         height:17px; width:17px;
+         height:16px; width:16px; top:4px;
     }
     .side_post_link:hover:after {
         background:#efefef;

@@ -30,11 +30,11 @@ $yarController = new YarController();
 
 // TODO:
 // ###### «»︽
+// ### post titles
+// ### sidebar css
 // how to locate permalink to each article?
 
 // after verified : 
 // templateFilter, normalHeaderAction;
-
-// in sidebar.php, handle postid.
 
 ?>
