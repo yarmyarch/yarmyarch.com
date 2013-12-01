@@ -15,6 +15,7 @@
 <script type="text/javascript" src="<?php echo get_template_directory_uri(); ?>/js/YarAjax.js"></script>
 <script type="text/javascript" src="<?php echo get_template_directory_uri(); ?>/js/OpenAPI.js.php"></script>
 <script type="text/javascript" src="<?php echo get_template_directory_uri(); ?>/js/SlideUtil.js"></script>
+<script type="text/javascript" src="<?php echo get_template_directory_uri(); ?>/js/ScrollUtil.js"></script>
 <script type="text/javascript" src="<?php echo get_template_directory_uri(); ?>/decoration/t_<?php echo $decorationId; ?>/Decoration.js"></script>
 <script type="text/javascript" src="<?php echo get_template_directory_uri(); ?>/js/Page.js"></script>
 

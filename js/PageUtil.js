@@ -14,7 +14,9 @@ var buf = {
     getEBCNBuffer : {},
         
     topList : {},
-    leftList : {}
+    leftList : {},
+    
+    getStyleBuffer : {}
 };
 
 return self = {
@@ -298,6 +300,30 @@ return self = {
         var offset = e.offsetLeft; 
         if(e.offsetParent != null) offset += self.getLeft(e.offsetParent, --refresh); 
         return _buf.leftList[id] = offset; 
+    },
+    
+    // would be used by bindOnScroll
+    getStyle : function (element, key) {
+                
+        //check buffer first
+        var _buf = buf,
+            id = util.validateId(element),
+            result = _buf.getStyleBuffer[id],
+            doc = document,
+            styles;
+        if (result) return result;
+        
+        if (result = element.style[key]) {
+            
+        } else if (result = element.currentStyle ? element.currentStyle[key] : "") {
+            
+        } else if (doc.defaultView && doc.defaultView.getComputedStyle) {
+            styles = doc.defaultView.getComputedStyle(element, null);
+            if (styles) {
+                return result = styles[key] || styles.getPropertyValue(key);
+            }
+        }
+        return _buf.getStyleBuffer[id] = result || "";
     }
 };
 

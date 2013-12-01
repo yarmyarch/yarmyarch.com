@@ -548,6 +548,10 @@ return self = {
         
         controller.initHandlers();
         controller.initEvents();
+        
+        // init bind on scroll
+        ScrollUtil.init();
+        //~ ScrollUtil.bindOnScroll(util.getElementById("sidebar"));
     },
     
     locate : controller.locate

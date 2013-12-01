@@ -654,6 +654,9 @@ applet {
     opacity:1;
     margin-top:24px;
 }
+.yar_float_sidebar {
+    position:fixed;
+}
 .side_post_link { 
     width: 100%;
     display: block;
