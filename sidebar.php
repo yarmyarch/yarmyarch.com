@@ -27,7 +27,7 @@
         
         if (!isset($layeredMenu[$category->slug])) {
             $layeredMenu[$category->slug] = array(
-                "id" => "c_".$category->slug,
+                "id" => "sideCategory_".$category->slug,
                 "title" => $category->name,
                 "link" => get_bloginfo("url")."/".$category->slug,
                 "groups" => array()
@@ -35,7 +35,7 @@
         }
         if (!isset($layeredMenu[$category->slug]["groups"][$group])) {
             $layeredMenu[$category->slug]["groups"][$group] = array(
-                "id" => "g_".$group,
+                "id" => "sideGroup_".$group,
                 "title" => $group,
                 // page to the first post of this group.
                 "link" => get_permalink($post->ID),
@@ -44,7 +44,7 @@
         }
         array_push($layeredMenu[$category->slug]["groups"][$group]["posts"], array(
             // give it a post id for locating.
-            "id" => "p_".$post->ID,
+            "id" => "sidePost_".$post->ID,
             "title" => htmlspecialchars($post->post_title),
             "link" => get_permalink($post->ID)
         ));
@@ -53,12 +53,12 @@
     foreach ($layeredMenu as $category) {
         
         ?>
-        <a href="<?php echo $category["link"]; ?>" onclick="javascript:return false;" class="side_menu_category" id="smCat_<?php echo $category["id"]; ?>" title="<?php echo $category["title"]; ?>"><?php echo $category["title"]; ?></a>
+        <a href="<?php echo $category["link"]; ?>" onclick="javascript:return false;" class="side_menu_category" id="<?php echo $category["id"]; ?>" title="<?php echo $category["title"]; ?>"><?php echo $category["title"]; ?></a>
         <?php
         foreach($category["groups"] as $group) {
             ?>
-            <a href="<?php echo $group["link"]; ?>" onclick="javascript:return false;" class="side_menu_group" id="smGroup_<?php echo $group["id"]; ?>" title="<?php echo $group["title"]; ?>"><?php echo $group["title"]; ?></a>
-            <div class="side_menu_posts" id="smPosts_<?php echo $group["id"]; ?>">
+            <a href="<?php echo $group["link"]; ?>" onclick="javascript:return false;" class="side_menu_group" id="t_<?php echo $group["id"]; ?>" title="<?php echo $group["title"]; ?>"><?php echo $group["title"]; ?></a>
+            <div class="side_menu_posts" id="p_<?php echo $group["id"]; ?>">
             <?php
             foreach($group["posts"] as $post) {
                 ?>

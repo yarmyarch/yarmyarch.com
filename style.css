@@ -621,6 +621,9 @@ applet {
     box-shadow:none;
     border:2px inset #ccc;
 }
+.comment_wrap {
+    margin-top:1%;
+}
 
 /* end css for articles */
 
@@ -705,7 +708,8 @@ applet {
     background:#efefef;
     right: -13px;
 }
-.side_post_link:hover, .side_post_link.active:hover {
+.side_post_link:hover, .side_post_link.active {
+    padding-left:8px;
     color: rgb(80,192,255);
 }
 .side_post_link:hover:before, .side_post_link.active:before {
@@ -736,12 +740,12 @@ applet {
     box-sizing:border-box;
     transition:0.2s all linear;
 }
-.side_menu_group:hover {
+.side_menu_group:hover, .side_menu_group.active {
     
     background-color:#ccc;
     box-sizing:content-box;
 }
-.side_menu_group:hover:after {
+.side_menu_group:hover:after, .side_menu_group.active:after {
     
     background-color:#999;
     border-bottom: 12px solid transparent;

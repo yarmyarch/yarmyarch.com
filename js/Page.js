@@ -18,7 +18,10 @@ var LC = {
 };
 
 var buf = {
-    errorInterval : false
+    errorInterval : false,
+    
+    // used to locate the sidebar link.
+    lastPostId : false
 };
 
 var util = PageUtil;
@@ -105,6 +108,40 @@ var handlerList = {
                 _util.slideHide(_util.getElementById("userInfo_" + id));
             }
         );
+    },
+    
+    locatePost : function(e) {
+        var e = e || window.event,
+            target = e.target || e.srcElement,
+            id = target.id.match(/\d+/),
+            _util = util;
+            _buf = buf;
+        controller.locate(target);
+        
+        if (_buf.lastPostId == id) return;
+        
+        // focus the sidebar
+        // toggle the last one
+        var sidePost, parentId;
+        if (false != _buf.lastPostId) {
+            sidePost = _util.getElementById("sidePost_" + _buf.lastPostId);
+            sidePost.className = "side_post_link";
+            sidePost = sidePost.parentNode;
+            parentId = sidePost.id && sidePost.id.replace(/p_sideGroup_/, "");
+            sidePost = _util.getElementById("t_sideGroup_" + parentId);
+            sidePost && (sidePost.className = "side_menu_group");
+        }
+        
+        // show the current one
+        sidePost = _util.getElementById("sidePost_" + id);
+        sidePost.className = "side_post_link active";
+        sidePost = sidePost.parentNode;
+        parentId = sidePost.id && sidePost.id.replace(/p_sideGroup_/, "");
+        sidePost = _util.getElementById("t_sideGroup_" + parentId);
+        sidePost && (sidePost.className = "side_menu_group active");
+        
+        // update buffer
+        _buf.lastPostId = id;
     }
 };
 
@@ -161,16 +198,23 @@ var controller = {
                         _hl = handlerList,
                         _ut = util;
                     
-                    // check for id first.                
-                    if (_hl.idEventHandler[eventName][target.id] instanceof Function) {
-                        _hl.idEventHandler[eventName][target.id](e);
+                    // check for id first.
+                    var handlers = _hl.idEventHandler[eventName][target.id];                    
+                    for (var i in handlers) {
+                        if (handlers[i] instanceof Function) {
+                            handlers[i][e];
+                        }
                     }
                     
                     // then className
                     var classNameList = target.className.split(/\s+/);
                     for (var i = 0, len = classNameList.length; i < len; ++i) {
-                        if (_hl.classEventHandler[eventName][classNameList[i]] instanceof Function) {
-                            _hl.classEventHandler[eventName][classNameList[i]](e);
+                        
+                        handlers = _hl.classEventHandler[eventName][classNameList[i]];
+                        for (var j in handlers) {
+                            if (handlers[j] instanceof Function) {
+                                handlers[j](e);
+                            }
                         }
                     }
                 }
@@ -194,8 +238,14 @@ var controller = {
             // if the comment list exist already, just diplay it.
             if (commentWrap) {
                 _util.toggleClass(commentWrap, "active", function(commentWrap, actived) {
-                    if (actived) _util.slideShow(commentWrap, 1);
-                    else _util.slideHide(commentWrap);
+                    if (actived) {
+                        _util.slideShow(commentWrap, 1);
+                        
+                        // relocate
+                        controller.locate(target);
+                    } else {
+                        _util.slideHide(commentWrap);
+                    }
                 });
             } else {
                 // show the loading image below
@@ -230,6 +280,9 @@ var controller = {
                                 _util.slideShow(_util.getElementById("userInfo_" + id));
                             }
                         }, 0);
+                        
+                        // relocate
+                        controller.locate(target);
                     }
                 );
             }
@@ -249,7 +302,7 @@ var controller = {
             
             var target = e.target || e.srcElement,
                 text = target.value || target.text;
-            if (event.ctrlKey == 1 && event.keyCode == 13) {
+            if (event.ctrlKey == 1 && (event.keyCode == 13 || event.which == 13)) {
                 handlerList.sendCommentHandler(e);
             }
             if (target.value.length >= 1900) {
@@ -292,6 +345,8 @@ var controller = {
                 console.log(response);
             });
         });
+        
+        self.addEventListenerByClassName("article_title_link", "onclick", handlerList.locatePost);
     },
     
     updateUserInfo : function(response) {
@@ -364,15 +419,37 @@ var controller = {
             infoWrap.innerHTML = pageConfig.language.clickToSend;
             infoWrap.style.color = "";
         }, LC.ERROR_TIMEOUT);
+    },
+    
+    /**
+     * try to locate to the given element, that leads the scrollTop change by the sliderUtil.
+     */
+    locate : function(elem, refreshLevel) {
+        var _util = util,
+            scrollTop = document.documentElement.scrollTop || document.body.scrollTop,
+            targetTop;
+        
+        if (!elem) return;
+        targetTop = _util.getTop(elem, refreshLevel) - document.documentElement.clientHeight * 0.1;
+        
+        SlideUtil.run([scrollTop, targetTop, 0.3, 40, function(target){
+            document.documentElement.scrollTop = document.body.scrollTop = target;
+        }, 0.5]);
     }
 };
 
 return self = {
     addEventListenerByClassName : function(className, eventName, callback) {
-        handlerList.classEventHandler[eventName][className] = callback;
+        var hl = handlerList.classEventHandler[eventName][className];
+        
+        !hl && (hl = handlerList.classEventHandler[eventName][className] = []);
+        handlerList.classEventHandler[eventName][className].push(callback);
     },
     addEventListenerById : function(id, eventName, callback) {
-        handlerList.idEventHandler[eventName][id] = callback;
+        var hl = handlerList.idEventHandler[eventName][id];
+        
+        !hl && (hl = handlerList.classEventHandler[eventName][id] = []);
+        hl.push(callback);
     },
     
     controller : controller,
@@ -419,6 +496,7 @@ return self = {
                     _util.getElementById("headerBicycle").className = _util.getElementById("headerBicycle").className + " active";
                 }, 1100);
                 
+                /*
                 Cycler.add("birds_2", Cycler.handler.slide(-0.1));
                 Cycler.add("birds_1", Cycler.handler.slide(-0.08));
                 Cycler.add("mountain_1", Cycler.handler.slide(-0.03));
@@ -426,6 +504,7 @@ return self = {
                 Cycler.add("clouds_3", Cycler.handler.slide(-0.05));
                 Cycler.add("clouds_2", Cycler.handler.slide(-0.05));
                 Cycler.add("clouds_1", Cycler.handler.slide(-0.09));
+                */
                 //~ Cycler.run();
             }, pageConfig.animationTimeout);
         });
@@ -469,7 +548,9 @@ return self = {
         
         controller.initHandlers();
         controller.initEvents();
-    }
+    },
+    
+    locate : controller.locate
 };
 })();
 

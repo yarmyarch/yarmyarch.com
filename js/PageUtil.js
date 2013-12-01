@@ -11,7 +11,10 @@ var buf = {
     elemList : {},
     offsetHeightList : {},
     offsetWidthList : {},
-    getEBCNBuffer : {}
+    getEBCNBuffer : {},
+        
+    topList : {},
+    leftList : {}
 };
 
 return self = {
@@ -275,6 +278,26 @@ return self = {
         }
         
         return c;
+    },
+    
+    getTop : function(e, refresh){
+        var id = (self.validateId(e)),
+            _buf = buf;
+        if (!refresh && _buf.topList[id]) return _buf.topList[id];
+        
+        var offset = e.offsetTop;
+        if(e.offsetParent != null) offset += self.getTop(e.offsetParent, --refresh); 
+        return _buf.topList[id] = offset; 
+    },
+    
+    getLeft : function(e, refresh){
+        var id = (self.validateId(e)),
+            _buf = buf;
+        if (!refresh && _buf.leftList[id]) return _buf.leftList[id];
+        
+        var offset = e.offsetLeft; 
+        if(e.offsetParent != null) offset += self.getLeft(e.offsetParent, --refresh); 
+        return _buf.leftList[id] = offset; 
     }
 };
 
