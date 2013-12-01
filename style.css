@@ -510,18 +510,18 @@ applet {
     font-size: 2.2em;
     line-height: 120%;
     display: block;
-    color: #666;
-    text-shadow: 0px 0px 12px #FFF;
+    color: #FFF;
+    text-shadow: 0px 0px 12px #666;
     white-space:nowrap;
     text-overflow:ellipsis;
     
     position: relative;
     
-    -webkit-box-reflect: below 0% linear-gradient(transparent, rgba(255,255,255,0.5) 400%);
-    -moz-box-reflect: below 0% linear-gradient(transparent, rgba(255,255,255,0.5) 400%);
-    -ms-box-reflect: below 0% linear-gradient(transparent, rgba(255,255,255,0.5) 400%);
-    -o-box-reflect: below 0% linear-gradient(transparent, rgba(255,255,255,0.5) 400%);
-    box-reflect: below 0% linear-gradient(transparent, rgba(255,255,255,0.5) 400%);
+    -webkit-box-reflect: below 0% linear-gradient(transparent, rgba(255,255,255,0.8));
+    -moz-box-reflect: below 0% linear-gradient(transparent, rgba(255,255,255,0.8));
+    -ms-box-reflect: below 0% linear-gradient(transparent, rgba(255,255,255,0.8));
+    -o-box-reflect: below 0% linear-gradient(transparent, rgba(255,255,255,0.8));
+    box-reflect: below 0% linear-gradient(transparent, rgba(255,255,255,0.8));
 }
 
 .article_title_img {
@@ -1241,11 +1241,11 @@ applet {
         top: -42px;
     }
     .article_title_link {
-        -webkit-box-reflect: below 0% linear-gradient(transparent, rgba(255,255,255,0.3) 800%);
-        -moz-box-reflect: below 0% linear-gradient(transparent, rgba(255,255,255,0.3) 800%);
-        -ms-box-reflect: below 0% linear-gradient(transparent, rgba(255,255,255,0.3) 800%);
-        -o-box-reflect: below 0% linear-gradient(transparent, rgba(255,255,255,0.3) 800%);
-        box-reflect: below 0% linear-gradient(transparent, rgba(255,255,255,0.3) 800%);
+        -webkit-box-reflect: below 0% linear-gradient(transparent, rgba(255,255,255,0.3));
+        -moz-box-reflect: below 0% linear-gradient(transparent, rgba(255,255,255,0.3));
+        -ms-box-reflect: below 0% linear-gradient(transparent, rgba(255,255,255,0.3));
+        -o-box-reflect: below 0% linear-gradient(transparent, rgba(255,255,255,0.5));
+        box-reflect: below 0% linear-gradient(transparent, rgba(255,255,255,0.5));
     }
     .article_date {
         margin-top: 4px;
@@ -1445,11 +1445,11 @@ applet {
         top: -34px;
     }
     .article_title_link {
-        -webkit-box-reflect: below 0% linear-gradient(transparent, rgba(255,255,255,0.3) 800%);
-        -moz-box-reflect: below 0% linear-gradient(transparent, rgba(255,255,255,0.3) 800%);
-        -ms-box-reflect: below 0% linear-gradient(transparent, rgba(255,255,255,0.3) 800%);
-        -o-box-reflect: below 0% linear-gradient(transparent, rgba(255,255,255,0.3) 800%);
-        box-reflect: below 0% linear-gradient(transparent, rgba(255,255,255,0.3) 800%);
+        -webkit-box-reflect: below 0% linear-gradient(transparent, rgba(255,255,255,0.5));
+        -moz-box-reflect: below 0% linear-gradient(transparent, rgba(255,255,255,0.5));
+        -ms-box-reflect: below 0% linear-gradient(transparent, rgba(255,255,255,0.5));
+        -o-box-reflect: below 0% linear-gradient(transparent, rgba(255,255,255,0.5));
+        box-reflect: below 0% linear-gradient(transparent, rgba(255,255,255,0.5));
     }
     .article_date {
         margin-top: 4px;

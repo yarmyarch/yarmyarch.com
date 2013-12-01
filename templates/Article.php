@@ -1,6 +1,7 @@
 <?php
     $postId = $post->ID;
     $category = $globalUtils->getPostCategory($postId);
+    if (is_array($category)) $category = $category[0];
 ?>
 <div class="article arcitle_category_<?php echo $category->slug; ?>" id="arcitleCategory_<?php echo $postId; ?>">
     <div class="article_title" id="articleTitle_<?php echo $postId; ?>">
