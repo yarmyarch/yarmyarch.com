@@ -213,5 +213,12 @@ class YarAjaxHandler {
             echo $content;
         }
     }
+    
+    /**
+     * if not category given, then try to load the whole post list, but not in "talking" just as it's in index.php.
+     */
+    public function loadPost(id, category = "") {
+        
+    }
 }
 ?>

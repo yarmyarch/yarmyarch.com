@@ -28,6 +28,12 @@ $yarAjaxHandlers = new YarAjaxHandler();
 global $yarController;
 $yarController = new YarController();
 
+global $yarConfig;
+$yarConfig = array(
+    // posts loaded for each request.
+    POST_PER_REQ => 1
+);
+
 // TODO:
 // ###### «»︽
 // ### post titles
