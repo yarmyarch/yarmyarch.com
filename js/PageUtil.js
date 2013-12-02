@@ -192,19 +192,20 @@ return self = {
         return buf.elemList[id] || (buf.elemList[id] = document.getElementById(id));
     },
     
-    getElementsByClassName : function(className, tagName, useBuffer) {
+    getElementsByClassName : function(className, tagName, parentNode, updateBuffer) {
             
         //check buf first
         var _buf = buf,
             elems, tmpElems,
-            key = className + "_" + tagName;
+            key = className + "_" + tagName,
+            parentNode = parentNode || document;
         if (!updateBuffer && _buf.getEBCNBuffer[key]) return _buf.getEBCNBuffer[key];
         
         elems = document.getElementsByClassName && document.getElementsByClassName(className);
         
         if (elems) return elems;
         tagName = tagName || "div";
-        tmpElems = document.getElementsByTagName(tagName);
+        tmpElems = parentNode.getElementsByTagName(tagName);
         elems = [];
         for (var i = 0, len = tmpElems.length; i < len; ++i) {
             tmpElems[i].className.match(className) && elems.push(tmpElems[i]);

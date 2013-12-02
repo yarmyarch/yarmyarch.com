@@ -160,7 +160,7 @@ class YarAjaxHandler {
             ob_start();
             include(dirname(__FILE__)."/../templates/CommentContent.php");
             $contents = ob_get_contents();
-            ob_end_clean();            
+            ob_end_clean();
         
             $result = array(
                 'status' => 0,
@@ -217,8 +217,18 @@ class YarAjaxHandler {
     /**
      * if not category given, then try to load the whole post list, but not in "talking" just as it's in index.php.
      */
-    public function loadPost(id, category = "") {
+    public function loadPost($cat = "", $id = -1) {
+        global $postHandler;
         
+        $result = $postHandler->load($cat, $id);
+        
+        $result = array(
+            'status' => 0,
+            'msg' => "",
+            'content' => $result["contentsInArray"]
+        );
+        
+        echo json_encode($result);
     }
 }
 ?>

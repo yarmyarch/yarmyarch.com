@@ -19,9 +19,13 @@ include(dirname(__FILE__)."/class/Controller.php");
 session_name("yar_mf_tick");
 session_start();
 
-new PostHandler();
+global $postHandler;
+$postHandler = new PostHandler();
+
 new TemplateFilter();
+
 global $globalUtils;
+
 global $yarAjaxHandlers;
 $yarAjaxHandlers = new YarAjaxHandler();
 

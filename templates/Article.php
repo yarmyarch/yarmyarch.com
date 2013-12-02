@@ -3,7 +3,7 @@
     $category = $globalUtils->getPostCategory($postId);
     if (is_array($category)) $category = $category[0];
 ?>
-<div class="article arcitle_category_<?php echo $category->slug; ?>" id="arcitleCategory_<?php echo $postId; ?>">
+<div class="article arcitle_category_<?php echo $category->slug; ?>" id="arcitle_<?php echo $postId; ?>">
     <div class="article_title" id="articleTitle_<?php echo $postId; ?>">
         <img class="article_title_img" src="<?php echo get_template_directory_uri(); ?>/imgs/cat/<?php echo $category->slug; ?>.jpg" />
         <?php

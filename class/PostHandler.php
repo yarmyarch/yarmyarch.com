@@ -3,6 +3,7 @@
 /* shot code in posts */
 class PostHandler {
 
+    // image size
     public static $WIDTH = 600;
     public static $HEIGHT = 600;
 
@@ -52,6 +53,56 @@ class PostHandler {
             return '<div class="img"><img src='.home_url().'/resource/bimgs/upload/'.$src.' /></div>';
         }
         else return "";
+    }
+    
+    public function load($categoryName = "", $id = -1) {
+        global $yarConfig;
+        
+        if (!$categoryName) {
+            $posts = get_posts(array('category__not_in' => array($globalUtils->getCategoryBySlug("talking")->term_id)));
+        } else {
+            global $globalUtils;
+            $posts = $globalUtils->getPostsByCategoryName("categoryName");
+        }
+        
+        $posts = do_filter("yar_load_posts", $posts, $id, $categoryName);
+        
+        // limited post count
+        $postCount = 0;
+        // start from given index, count $yarConfig.POST_PER_REQ posts returned.
+        $start = 0;
+        $contents = array();
+        
+        // genenrate html code from template file.
+        ob_start();
+        foreach($posts as $post) {
+            
+            if ($id != -1 && $post->ID != $id && !$start) {
+                continue;
+            } elseif ($post->ID == $id) {
+                $start = 1;
+            }
+        
+            ++$postCount;
+            
+            include(dirname(__FILE__)."/../templates/Article.php");
+            
+            // load content to the result array
+            $contents[$post->ID] = ob_get_contents();
+            ob_clean();
+            
+            // load limited post only.
+            if ($postCount >= $yarConfig.POST_PER_REQ) break;
+        }
+        ob_end_clean();
+        
+        $contents = do_filter("yar_post_contents", $contents, $id, $categoryName);
+        
+        return array(
+            "posts" => $contents,
+            "contents" => join("", $contents),
+            "contentsInArray" => $contents
+        );
     }
 }
 

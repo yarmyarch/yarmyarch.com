@@ -17,11 +17,21 @@ var LC = {
     }
 };
 
+// load global pageConfig here
+var pageConfig = pageConfig;
+
 var buf = {
     errorInterval : false,
     
+    // array that records all possible posts in current page.
+    postIdList : [],
+    // reverse of the postIdList array, that points to the index for given id.
+    postIdToIndex : {},
+    
     // used to locate the sidebar link.
-    lastPostId : false
+    currentPostId : false,
+    
+    scrollTop : 0
 };
 
 var util = PageUtil;
@@ -58,7 +68,7 @@ var handlerList = {
         }
     },
         
-    sendCommentHandler : function(e) {
+    sendComments : function(e) {
         var target = e.target || e.srcElement,
             id = target.id.match(/\d+/),
             _util = util,
@@ -110,38 +120,204 @@ var handlerList = {
         );
     },
     
+    loadComments : function(e) {
+        
+        var target = e.target || e.srcElement,
+            id = target.id.match(/\d+/),
+            _util = util,
+            commentWrap = _util.getElementById("commentWrap_" + id),
+            articleActionWrap = _util.getElementById("arcicleActionWrap_" + id),
+            _lc = LC;
+        
+        if (articleActionWrap.className.match(/disabled/)) return;
+        
+        // if the comment list exist already, just diplay it.
+        if (commentWrap) {
+            _util.toggleClass(commentWrap, "active", function(commentWrap, actived) {
+                if (actived) {
+                    _util.slideShow(commentWrap, 1);
+                    
+                    // relocate
+                    controller.locate(target);
+                } else {
+                    _util.slideHide(commentWrap);
+                }
+            });
+        } else {
+            // show the loading image below
+            var loading = _util.getElementById("commentLoading_" + id);
+            _util.toggleClass(loading, "active", _util.toggleDisplay);
+            
+            _util.get(_lc.AJAX_LINK 
+                + "?a=comment"
+                + "&pid=" + id,
+                function(response) {
+                    loading.style.display = "none";
+                    loading.style.position = "absolute";
+                    
+                    var div = document.createElement("div");
+                    
+                    div.innerHTML = response.content.trim();
+                    articleActionWrap.appendChild(div.childNodes[0]);
+                    
+                    // remove the loading image into the comment_input node so it can be used when a comment submitted.
+                    _util.getElementById("commentInput_" + id).appendChild(loading);
+                    
+                    // set the comment wrap visible, with some basic animations.
+                    commentWrap = _util.getElementById("commentWrap_" + id);
+                    commentWrap.style.display = "none";
+                    setTimeout(function() {
+                        _util.slideShow(_util.getElementById("commentWrap_" + id));
+                        
+                        // if the user is logged, hide the user info input area.
+                        if (pageConfig.userLogged) {
+                            _util.slideHide(_util.getElementById("userInfo_" + id));
+                        } else {
+                            _util.slideShow(_util.getElementById("userInfo_" + id));
+                        }
+                    }, 0);
+                    
+                    // relocate
+                    controller.locate(target);
+                }
+            );
+        }
+    },
+    
     locatePost : function(e) {
         var e = e || window.event,
             target = e.target || e.srcElement,
             id = target.id.match(/\d+/),
-            _util = util;
-            _buf = buf;
-        controller.locate(target);
+            _util = util,
+            _buf = buf,
+            _lc = LC;
+        controller.locate("arcitle_" + id);
         
         if (_buf.lastPostId == id) return;
         
-        // focus the sidebar
-        // toggle the last one
-        var sidePost, parentId;
-        if (false != _buf.lastPostId) {
-            sidePost = _util.getElementById("sidePost_" + _buf.lastPostId);
+        // if it's not in currently loaded posts, get it via ajax.
+        if (!_util.getElementById("article" + id)) {
+            
+            // show loading image at the proper place and locate the scroll top to it, located from _buf.postIdToIndex. XXXXXX
+            
+            _util.get(
+                _lc.AJAX_LINK 
+                + "?a=loadPost"
+                + "&cat=" + pageConfig.category
+                + "&id=" + id,
+                function(response) {
+                    // hide loading image here and append loaded html content.
+                    alert(response);
+                }
+            );
+        }
+        
+        // update buffer
+        _buf.currentPostId = id;
+    },
+    
+    // show actived post in sidebar
+    locatePostInSidebar : function(e) {
+        var _buf = buf,
+            scrollTop = document.documentElement.scrollTop || document.body.scrollTop,
+            targetPostId = _buf.postIdToIndex[_buf.currentPostId],
+            isUpToDown = false;
+        
+        // scrolling from top to bottom, check next related post.
+        if (scrollTop >= _buf.scrollTop) {
+            isUpToDown = 1;
+            targetPostId = _buf.postIdList[targetPostId + 1];
+        } else {
+            isUpToDown = 0;
+            targetPostId = _buf.postIdList[targetPostId - 1];
+        }
+        
+        if (!targetPostId) return;
+        
+        // if target post found, try to check if it matches the rule of been figured as "actived".
+        // rule for scrolling up to down: the title of the target post is smaller than or equels to 50% of the screen height;
+        // rule for scrolling down to up: the title of the current post is bigger than or equels to 30% of the screen height.
+        // if rules matched, then set target as current actived post, otherwise do nothing.
+        var setTarget = false,
+            halfScreenHeight = document.documentElement.clientHeight * 0.5;
+        
+        // refresh layer : 1
+        setTarget = setTarget || (isUpToDown && _util.getTop("article_" + targetPostId, 1) <= halfScreenHeight);
+        setTarget = setTarget || (!isUpToDown && _util.getTop("article_" + _buf.currentPostId, 1) >= halfScreenHeight);
+        
+        if (setTarget) {
+            
+            // focus the sidebar
+            // toggle the last one
+            var sidePost, parentId;
+            
+            sidePost = _util.getElementById("sidePost_" + _buf.currentPostId);
             sidePost.className = "side_post_link";
             sidePost = sidePost.parentNode;
             parentId = sidePost.id && sidePost.id.replace(/p_sideGroup_/, "");
             sidePost = _util.getElementById("t_sideGroup_" + parentId);
             sidePost && (sidePost.className = "side_menu_group");
+            
+            // show the current one
+            sidePost = _util.getElementById("sidePost_" + id);
+            sidePost.className = "side_post_link active";
+            sidePost = sidePost.parentNode;
+            parentId = sidePost.id && sidePost.id.replace(/p_sideGroup_/, "");
+            sidePost = _util.getElementById("t_sideGroup_" + parentId);
+            sidePost && (sidePost.className = "side_menu_group active");
+            
+            // update buffer
+            _buf.currentPostId = targetPostId;
         }
         
-        // show the current one
-        sidePost = _util.getElementById("sidePost_" + id);
-        sidePost.className = "side_post_link active";
-        sidePost = sidePost.parentNode;
-        parentId = sidePost.id && sidePost.id.replace(/p_sideGroup_/, "");
-        sidePost = _util.getElementById("t_sideGroup_" + parentId);
-        sidePost && (sidePost.className = "side_menu_group active");
+        _buf.scrollTop = scrollTop;
+    }, 
+    
+    openApiLogin : function(e) {
+            
+        var target = e.targt || e.srcElement,
+            id = target.id.match(/\d+/),
+            type = target.id.match(/openApiLogin_(\w+)/)[1];
         
-        // update buffer
-        _buf.lastPostId = id;
+        OpenApi.request({a : "login", yarType : type, yarDisplay : 1}, function(response) {
+            // in case of error
+            if (response && (+response.status) && +id) {
+                controller.showErrorMsg(id, response.msg);
+                return;
+            }
+            
+            if (!response && +id) {
+                controller.showErrorMsg(id, pageConfig.language.unknownError);
+                return;
+            }
+            
+            if (!response) {
+                console.log("Error detected from backend.");
+                return;
+            }
+            
+            controller.updateUserInfo(response);
+            
+            console.log(response);
+        });
+    },
+    
+    hotKeySend : function(e) {
+            
+        var target = e.target || e.srcElement,
+            text = target.value || target.text;
+        if (event.ctrlKey == 1 && (event.keyCode == 13 || event.which == 13)) {
+            handlerList.sendComments(e);
+        }
+        if (target.value.length >= 1900) {
+            var id = target.id.match(/\d+/),
+                textCount = LC.MAX_TEXT_COUNT - target.value.length,
+                language = textCount >= 0 ? "textCount" : "textCountOverflow",
+                functionCall = textCount >= 0 ? "showInfoMsg" : "showErrorMsg";
+            controller[functionCall](id, pageConfig.language[language]
+                .replace(/%d%/, LC.MAX_TEXT_COUNT - target.value.length)
+            );
+        }
     }
 };
 
@@ -185,7 +361,7 @@ var controller = {
         }
     },
     
-    initHandlers : function() {
+    initEventHandlers : function() {
         var _hl = handlerList, _util = util;
         
         for (var i in _hl.classEventHandler) {
@@ -224,69 +400,10 @@ var controller = {
     
     initEvents : function() {
         
+        var _hl = handlerList;
+        
         // load comment list.
-        self.addEventListenerByClassName("action_comment", "onclick", function(e) {
-            var target = e.target || e.srcElement,
-                id = target.id.match(/\d+/),
-                _util = util,
-                commentWrap = _util.getElementById("commentWrap_" + id),
-                articleActionWrap = _util.getElementById("arcicleActionWrap_" + id),
-                _lc = LC;
-            
-            if (articleActionWrap.className.match(/disabled/)) return;
-            
-            // if the comment list exist already, just diplay it.
-            if (commentWrap) {
-                _util.toggleClass(commentWrap, "active", function(commentWrap, actived) {
-                    if (actived) {
-                        _util.slideShow(commentWrap, 1);
-                        
-                        // relocate
-                        controller.locate(target);
-                    } else {
-                        _util.slideHide(commentWrap);
-                    }
-                });
-            } else {
-                // show the loading image below
-                var loading = _util.getElementById("commentLoading_" + id);
-                _util.toggleClass(loading, "active", _util.toggleDisplay);
-                
-                _util.get(_lc.AJAX_LINK 
-                    + "?a=comment"
-                    + "&pid=" + id,
-                    function(response) {
-                        loading.style.display = "none";
-                        loading.style.position = "absolute";
-                        
-                        var div = document.createElement("div");
-                        
-                        div.innerHTML = response.content.trim();
-                        articleActionWrap.appendChild(div.childNodes[0]);
-                        
-                        // remove the loading image into the comment_input node so it can be used when a comment submitted.
-                        _util.getElementById("commentInput_" + id).appendChild(loading);
-                        
-                        // set the comment wrap visible, with some basic animations.
-                        commentWrap = _util.getElementById("commentWrap_" + id);
-                        commentWrap.style.display = "none";
-                        setTimeout(function() {
-                            _util.slideShow(_util.getElementById("commentWrap_" + id));
-                            
-                            // if the user is logged, hide the user info input area.
-                            if (pageConfig.userLogged) {
-                                _util.slideHide(_util.getElementById("userInfo_" + id));
-                            } else {
-                                _util.slideShow(_util.getElementById("userInfo_" + id));
-                            }
-                        }, 0);
-                        
-                        // relocate
-                        controller.locate(target);
-                    }
-                );
-            }
-        });
+        self.addEventListenerByClassName("action_comment", "onclick", _hl.loadComments);
         
         // show the user info wrap if logged in.
         self.addEventListenerByClassName("user_info_edit", "onclick", function(e) {
@@ -297,56 +414,15 @@ var controller = {
         });
         
         // submit a comment.
-        self.addEventListenerByClassName("comment_submit", "onclick", handlerList.sendCommentHandler);
-        self.addEventListenerByClassName("comment_textarea", "onkeyup", function(e) {
-            
-            var target = e.target || e.srcElement,
-                text = target.value || target.text;
-            if (event.ctrlKey == 1 && (event.keyCode == 13 || event.which == 13)) {
-                handlerList.sendCommentHandler(e);
-            }
-            if (target.value.length >= 1900) {
-                var id = target.id.match(/\d+/),
-                    textCount = LC.MAX_TEXT_COUNT - target.value.length,
-                    language = textCount >= 0 ? "textCount" : "textCountOverflow",
-                    functionCall = textCount >= 0 ? "showInfoMsg" : "showErrorMsg";
-                controller[functionCall](id, pageConfig.language[language]
-                    .replace(/%d%/, LC.MAX_TEXT_COUNT - target.value.length)
-                );
-            }
-        });
+        self.addEventListenerByClassName("comment_submit", "onclick", _hl.sendComments);
+        self.addEventListenerByClassName("comment_textarea", "onkeyup", _hl.hotKeySend);
         
         // login open api entrance
-        self.addEventListenerByClassName("open_api_login", "onclick", function(e) {
-            
-            var target = e.targt || e.srcElement,
-                id = target.id.match(/\d+/),
-                type = target.id.match(/openApiLogin_(\w+)/)[1];
-            
-            OpenApi.request({a : "login", yarType : type, yarDisplay : 1}, function(response) {
-                // in case of error
-                if (response && (+response.status) && +id) {
-                    controller.showErrorMsg(id, response.msg);
-                    return;
-                }
-                
-                if (!response && +id) {
-                    controller.showErrorMsg(id, pageConfig.language.unknownError);
-                    return;
-                }
-                
-                if (!response) {
-                    console.log("Error detected from backend.");
-                    return;
-                }
-                
-                controller.updateUserInfo(response);
-                
-                console.log(response);
-            });
-        });
+        self.addEventListenerByClassName("open_api_login", "onclick", _hl.openApiLogin);
         
-        self.addEventListenerByClassName("article_title_link", "onclick", handlerList.locatePost);
+        self.addEventListenerByClassName("article_title_link", "onclick", _hl.locatePost);
+        
+        _util.addEventListener(window, "scroll", _hl.locatePostInSidebar);
     },
     
     updateUserInfo : function(response) {
@@ -435,6 +511,25 @@ var controller = {
         SlideUtil.run([scrollTop, targetTop, 0.3, 40, function(target){
             document.documentElement.scrollTop = document.body.scrollTop = target;
         }, 0.5]);
+    },
+    
+    /**
+     * generate the full post list from current sidebar elements.
+     */
+    initPostList : function() {
+        var _util = util,
+            _buf = buf,
+            posts = _util.getElementsByClassName("side_post_link", "a", _util.getElementById("sidebar"));
+        
+        var id;
+        for (var i = 0, len = posts.length; i < len; ++i) {
+            id = posts[i].id.match(/\d+/);
+            _buf.postIdList[i] = id;
+            _buf.postIdToIndex[id] = i;
+        }
+        
+        // set the first post as the current actived one.
+        _buf.currentPostId = _buf.postIdList[0];
     }
 };
 
@@ -546,15 +641,16 @@ return self = {
         }, callback, 0);
         */
         
-        controller.initHandlers();
+        controller.initEventHandlers();
         controller.initEvents();
         
         // init bind on scroll
         ScrollUtil.init();
         //~ ScrollUtil.bindOnScroll(util.getElementById("sidebar"));
-    },
-    
-    locate : controller.locate
+        
+        // init existing post list via className.
+        controller.initPostList();
+    }
 };
 })();
 

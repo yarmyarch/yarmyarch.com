@@ -9,12 +9,16 @@ get_header();?>
 <div class="content" id="content">
     <div class="article-wrap">
     <?php
-    
         // Only generate posts from category about talking.
-        $posts = $globalUtils->getPostsByCategoryName("talking");
-        foreach($posts as $post) {
-            include(dirname(__FILE__)."/../templates/Article.php");
-        }
+        global $postHandler;
+        global $curCategory;
+        
+        $curCategory = "talking";
+        
+        $postInfo = $postHandler->load($curCategory);
+        echo $postInfo["contents"];
+        // posts for sidebar
+        $posts = $postInfo["posts"];
     ?>
     </div>
     <?php 

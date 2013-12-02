@@ -2,6 +2,7 @@
 <script type="text/javascript">
     var pageConfig = pageConfig || {};
     pageConfig.userLogged = +"<?php echo $current_user->ID; ?>";
+    pageConfig.category = "<?php global $curCategory; echo $curCategory; ?>";
     pageConfig.language = {
         notNullUserName : "<?php _e("随便写个名字，让孤知道你是谁。", "yarmyarch") ?>",
         notNullEmail : "<?php _e("随便写个邮箱，以便紧急情况例如地球爆炸前夕孤能发来最诚挚的慰问。", "yarmyarch") ?>",
