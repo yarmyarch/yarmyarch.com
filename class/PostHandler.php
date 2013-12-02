@@ -62,10 +62,10 @@ class PostHandler {
             $posts = get_posts(array('category__not_in' => array($globalUtils->getCategoryBySlug("talking")->term_id)));
         } else {
             global $globalUtils;
-            $posts = $globalUtils->getPostsByCategoryName("categoryName");
+            $posts = $globalUtils->getPostsByCategoryName($categoryName);
         }
         
-        $posts = do_filter("yar_load_posts", $posts, $id, $categoryName);
+        $posts = apply_filters("yar_load_posts", $posts, $id, $categoryName);
         
         // limited post count
         $postCount = 0;
@@ -92,14 +92,14 @@ class PostHandler {
             ob_clean();
             
             // load limited post only.
-            if ($postCount >= $yarConfig.POST_PER_REQ) break;
+            if ($postCount >= $yarConfig["POST_PER_REQ"]) break;
         }
         ob_end_clean();
         
-        $contents = do_filter("yar_post_contents", $contents, $id, $categoryName);
+        $contents = apply_filters("yar_post_contents", $contents, $id, $categoryName);
         
         return array(
-            "posts" => $contents,
+            "posts" => $posts,
             "contents" => join("", $contents),
             "contentsInArray" => $contents
         );

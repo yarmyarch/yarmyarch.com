@@ -7,10 +7,6 @@
 class TemplateFilter {
     
     function __construct() {
-        //~ add_action("yar_home_header", array(&$this, "homeHeaderAction"));
-        add_action("yar_home_header", array(&$this, "normalHeaderAction"));
-        add_action("yar_normal_header", array(&$this, "normalHeaderAction"));
-        
         add_action("yar_header", array(&$this, "headerStuffAction"));
         add_action("yar_footer", array(&$this, "footerStuffAction"));
         
@@ -60,8 +56,8 @@ class TemplateFilter {
         add_filter("author_email", array(&$this, "ignoreSessionEmail"), 0, 3);
     }
     
-    public function headerStuffAction() {    
-        
+    public function headerStuffAction() {
+    
         global $decorationId;
         if ($decorationId == 1) {
             if (is_home() && !preg_match("/MSIE/i", $_SERVER['HTTP_USER_AGENT'])) {
@@ -70,7 +66,6 @@ class TemplateFilter {
                 do_action("yar_normal_header");
             }
         }
-        
     }
     
     public function homeHeaderAction() {
@@ -83,7 +78,6 @@ class TemplateFilter {
     }
     
     public function normalHeaderAction() {
-        
         echo '<link rel="stylesheet" type="text/css" media="all" href="'.get_bloginfo( 'template_directory', 'display' ).'/decoration/t_1/css/non-animation.css" />
             <script type="text/javascript">
                 var pageConfig = {

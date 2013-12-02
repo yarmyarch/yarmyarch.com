@@ -18,7 +18,7 @@ var LC = {
 };
 
 // load global pageConfig here
-var pageConfig = pageConfig;
+var pc = pageConfig;
 
 var buf = {
     errorInterval : false,
@@ -48,22 +48,22 @@ var handlerList = {
     
     validator : {
         notNull : function(field, value) {
-            if (!value) return { error: pageConfig.language["notNull" + field[0].toUpperCase() + field.substr(1)] };
+            if (!value) return { error: pc.language["notNull" + field[0].toUpperCase() + field.substr(1)] };
             return value;
         },
         
         email : function(field, value) {
-            if (!value.match(/\w+((-w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+/)) return { error: pageConfig.language.notEmail };
+            if (!value.match(/\w+((-w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+/)) return { error: pc.language.notEmail };
             return value;
         },
         
         tooShort : function(field, value) {
-            if (value.length < 6) return { error : pageConfig.language.tooShort };
+            if (value.length < 6) return { error : pc.language.tooShort };
             return value;
         },
         
         tooLong : function(field, value) {
-            if (value.length > LC.MAX_TEXT_COUNT) return { error : pageConfig.language.tooLong.replace(/%d%/, LC.MAX_TEXT_COUNT) };
+            if (value.length > LC.MAX_TEXT_COUNT) return { error : pc.language.tooLong.replace(/%d%/, LC.MAX_TEXT_COUNT) };
             return value;
         }
     },
@@ -127,7 +127,8 @@ var handlerList = {
             _util = util,
             commentWrap = _util.getElementById("commentWrap_" + id),
             articleActionWrap = _util.getElementById("arcicleActionWrap_" + id),
-            _lc = LC;
+            _lc = LC,
+            targetId = _util.validateId(target);
         
         if (articleActionWrap.className.match(/disabled/)) return;
         
@@ -138,7 +139,7 @@ var handlerList = {
                     _util.slideShow(commentWrap, 1);
                     
                     // relocate
-                    controller.locate(target);
+                    controller.locate(targetId);
                 } else {
                     _util.slideHide(commentWrap);
                 }
@@ -170,7 +171,7 @@ var handlerList = {
                         _util.slideShow(_util.getElementById("commentWrap_" + id));
                         
                         // if the user is logged, hide the user info input area.
-                        if (pageConfig.userLogged) {
+                        if (pc.userLogged) {
                             _util.slideHide(_util.getElementById("userInfo_" + id));
                         } else {
                             _util.slideShow(_util.getElementById("userInfo_" + id));
@@ -178,7 +179,7 @@ var handlerList = {
                     }, 0);
                     
                     // relocate
-                    controller.locate(target);
+                    controller.locate(targetId);
                 }
             );
         }
@@ -187,27 +188,27 @@ var handlerList = {
     locatePost : function(e) {
         var e = e || window.event,
             target = e.target || e.srcElement,
-            id = target.id.match(/\d+/),
+            id = target.id.match(/\d+/)[0],
             _util = util,
             _buf = buf,
             _lc = LC;
-        controller.locate("arcitle_" + id);
+        controller.locate("article_" + id);
         
-        if (_buf.lastPostId == id) return;
+        if (_buf.currentPostId == id) return;
         
         // if it's not in currently loaded posts, get it via ajax.
-        if (!_util.getElementById("article" + id)) {
+        if (!_util.getElementById("article_" + id)) {
             
             // show loading image at the proper place and locate the scroll top to it, located from _buf.postIdToIndex. XXXXXX
             
             _util.get(
                 _lc.AJAX_LINK 
                 + "?a=loadPost"
-                + "&cat=" + pageConfig.category
+                + "&cat=" + pc.category
                 + "&id=" + id,
                 function(response) {
                     // hide loading image here and append loaded html content.
-                    alert(response);
+                    console.log(response);
                 }
             );
         }
@@ -219,6 +220,7 @@ var handlerList = {
     // show actived post in sidebar
     locatePostInSidebar : function(e) {
         var _buf = buf,
+            _util = util,
             scrollTop = document.documentElement.scrollTop || document.body.scrollTop,
             targetPostId = _buf.postIdToIndex[_buf.currentPostId],
             isUpToDown = false;
@@ -232,7 +234,9 @@ var handlerList = {
             targetPostId = _buf.postIdList[targetPostId - 1];
         }
         
-        if (!targetPostId) return;
+        _buf.scrollTop = scrollTop;
+        
+        if (!targetPostId || !_util.getElementById("article_" + targetPostId)) return;
         
         // if target post found, try to check if it matches the rule of been figured as "actived".
         // rule for scrolling up to down: the title of the target post is smaller than or equels to 50% of the screen height;
@@ -242,35 +246,12 @@ var handlerList = {
             halfScreenHeight = document.documentElement.clientHeight * 0.5;
         
         // refresh layer : 1
-        setTarget = setTarget || (isUpToDown && _util.getTop("article_" + targetPostId, 1) <= halfScreenHeight);
-        setTarget = setTarget || (!isUpToDown && _util.getTop("article_" + _buf.currentPostId, 1) >= halfScreenHeight);
+        setTarget = setTarget || (isUpToDown && _util.getTop(_util.getElementById("article_" + targetPostId), 1) <= halfScreenHeight + scrollTop);
+        setTarget = setTarget || (!isUpToDown && _util.getTop(_util.getElementById("article_" + _buf.currentPostId), 1) >= halfScreenHeight + scrollTop);
         
         if (setTarget) {
-            
-            // focus the sidebar
-            // toggle the last one
-            var sidePost, parentId;
-            
-            sidePost = _util.getElementById("sidePost_" + _buf.currentPostId);
-            sidePost.className = "side_post_link";
-            sidePost = sidePost.parentNode;
-            parentId = sidePost.id && sidePost.id.replace(/p_sideGroup_/, "");
-            sidePost = _util.getElementById("t_sideGroup_" + parentId);
-            sidePost && (sidePost.className = "side_menu_group");
-            
-            // show the current one
-            sidePost = _util.getElementById("sidePost_" + id);
-            sidePost.className = "side_post_link active";
-            sidePost = sidePost.parentNode;
-            parentId = sidePost.id && sidePost.id.replace(/p_sideGroup_/, "");
-            sidePost = _util.getElementById("t_sideGroup_" + parentId);
-            sidePost && (sidePost.className = "side_menu_group active");
-            
-            // update buffer
-            _buf.currentPostId = targetPostId;
+            controller.setActivedPost(targetPostId);
         }
-        
-        _buf.scrollTop = scrollTop;
     }, 
     
     openApiLogin : function(e) {
@@ -287,7 +268,7 @@ var handlerList = {
             }
             
             if (!response && +id) {
-                controller.showErrorMsg(id, pageConfig.language.unknownError);
+                controller.showErrorMsg(id, pc.language.unknownError);
                 return;
             }
             
@@ -314,7 +295,7 @@ var handlerList = {
                 textCount = LC.MAX_TEXT_COUNT - target.value.length,
                 language = textCount >= 0 ? "textCount" : "textCountOverflow",
                 functionCall = textCount >= 0 ? "showInfoMsg" : "showErrorMsg";
-            controller[functionCall](id, pageConfig.language[language]
+            controller[functionCall](id, pc.language[language]
                 .replace(/%d%/, LC.MAX_TEXT_COUNT - target.value.length)
             );
         }
@@ -400,7 +381,8 @@ var controller = {
     
     initEvents : function() {
         
-        var _hl = handlerList;
+        var _hl = handlerList,
+            _util = util;
         
         // load comment list.
         self.addEventListenerByClassName("action_comment", "onclick", _hl.loadComments);
@@ -421,6 +403,7 @@ var controller = {
         self.addEventListenerByClassName("open_api_login", "onclick", _hl.openApiLogin);
         
         self.addEventListenerByClassName("article_title_link", "onclick", _hl.locatePost);
+        self.addEventListenerByClassName("side_post_link", "onclick", _hl.locatePost);
         
         _util.addEventListener(window, "scroll", _hl.locatePostInSidebar);
     },
@@ -477,7 +460,7 @@ var controller = {
         // set the send button back.
         clearTimeout(_buf.errorInterval[id]);
         _buf.errorInterval = setTimeout(function() {
-            errorWrap.innerHTML = pageConfig.language.clickToSend;
+            errorWrap.innerHTML = pc.language.clickToSend;
             errorWrap.style.color = "";
         }, LC.ERROR_TIMEOUT);
     },
@@ -492,7 +475,7 @@ var controller = {
         // set the send button back.
         clearTimeout(_buf.errorInterval[id]);
         _buf.errorInterval = setTimeout(function() {
-            infoWrap.innerHTML = pageConfig.language.clickToSend;
+            infoWrap.innerHTML = pc.language.clickToSend;
             infoWrap.style.color = "";
         }, LC.ERROR_TIMEOUT);
     },
@@ -500,8 +483,9 @@ var controller = {
     /**
      * try to locate to the given element, that leads the scrollTop change by the sliderUtil.
      */
-    locate : function(elem, refreshLevel) {
+    locate : function(elemId, refreshLevel) {
         var _util = util,
+            elem = _util.getElementById(elemId),
             scrollTop = document.documentElement.scrollTop || document.body.scrollTop,
             targetTop;
         
@@ -523,13 +507,44 @@ var controller = {
         
         var id;
         for (var i = 0, len = posts.length; i < len; ++i) {
-            id = posts[i].id.match(/\d+/);
+            // match returns an array...
+            id = posts[i].id.match(/\d+/) + "";
             _buf.postIdList[i] = id;
             _buf.postIdToIndex[id] = i;
         }
         
         // set the first post as the current actived one.
-        _buf.currentPostId = _buf.postIdList[0];
+        controller.setActivedPost(_buf.postIdList[0]);
+    },
+    
+    setActivedPost : function(postId) {
+        
+        var _buf = buf,
+            _util = util;
+        
+        // focus the sidebar
+        // toggle the last one
+        var sidePost, parentId;
+        
+        if (_buf.currentPostId) {
+            sidePost = _util.getElementById("sidePost_" + _buf.currentPostId);
+            sidePost.className = "side_post_link";
+            sidePost = sidePost.parentNode;
+            parentId = sidePost.id && sidePost.id.replace(/p_sideGroup_/, "");
+            sidePost = _util.getElementById("t_sideGroup_" + parentId);
+            sidePost && (sidePost.className = "side_menu_group");
+        }
+        
+        // show the current one
+        sidePost = _util.getElementById("sidePost_" + postId);
+        sidePost.className = "side_post_link active";
+        sidePost = sidePost.parentNode;
+        parentId = sidePost.id && sidePost.id.replace(/p_sideGroup_/, "");
+        sidePost = _util.getElementById("t_sideGroup_" + parentId);
+        sidePost && (sidePost.className = "side_menu_group active");
+        
+        // update buffer
+        _buf.currentPostId = postId;
     }
 };
 
@@ -577,31 +592,28 @@ return self = {
             });
             
             // show the posts and other page-related stuff here.
-            setTimeout(function() {
-                
-                _util.getElementById("mainWrap").className = _util.getElementById("mainWrap").className + " active";
-                _util.getElementById("copyRight").className = _util.getElementById("copyRight").className + " active";
-                setTimeout(function(){
-                    _util.getElementById("content").className = _util.getElementById("content").className + " active";
-                }, 500);
-                setTimeout(function(){
-                    _util.getElementById("sidebar").className = _util.getElementById("sidebar").className + " active";
-                }, 800);
-                setTimeout(function(){
-                    _util.getElementById("headerBicycle").className = _util.getElementById("headerBicycle").className + " active";
-                }, 1100);
-                
-                /*
-                Cycler.add("birds_2", Cycler.handler.slide(-0.1));
-                Cycler.add("birds_1", Cycler.handler.slide(-0.08));
-                Cycler.add("mountain_1", Cycler.handler.slide(-0.03));
-                Cycler.add("clouds_4", Cycler.handler.slide(-0.04));
-                Cycler.add("clouds_3", Cycler.handler.slide(-0.05));
-                Cycler.add("clouds_2", Cycler.handler.slide(-0.05));
-                Cycler.add("clouds_1", Cycler.handler.slide(-0.09));
-                */
-                //~ Cycler.run();
-            }, pageConfig.animationTimeout);
+            _util.getElementById("mainWrap").className = _util.getElementById("mainWrap").className + " active";
+            _util.getElementById("copyRight").className = _util.getElementById("copyRight").className + " active";
+            setTimeout(function(){
+                _util.getElementById("content").className = _util.getElementById("content").className + " active";
+            }, 500);
+            setTimeout(function(){
+                _util.getElementById("sidebar").className = _util.getElementById("sidebar").className + " active";
+            }, 800);
+            setTimeout(function(){
+                _util.getElementById("headerBicycle").className = _util.getElementById("headerBicycle").className + " active";
+            }, 1100);
+            
+            /*
+            Cycler.add("birds_2", Cycler.handler.slide(-0.1));
+            Cycler.add("birds_1", Cycler.handler.slide(-0.08));
+            Cycler.add("mountain_1", Cycler.handler.slide(-0.03));
+            Cycler.add("clouds_4", Cycler.handler.slide(-0.04));
+            Cycler.add("clouds_3", Cycler.handler.slide(-0.05));
+            Cycler.add("clouds_2", Cycler.handler.slide(-0.05));
+            Cycler.add("clouds_1", Cycler.handler.slide(-0.09));
+            */
+            //~ Cycler.run();
         });
             /*
         controller.initImages({

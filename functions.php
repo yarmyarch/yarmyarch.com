@@ -9,6 +9,12 @@
 error_reporting(E_ALL ^ E_NOTICE);
 ini_set('display_errors', '1');
 
+global $yarConfig;
+$yarConfig = array(
+    // posts loaded for each request.
+    POST_PER_REQ => 1
+);
+
 include(dirname(__FILE__)."/class/GlobalUtils.php");
 include(dirname(__FILE__)."/class/PostHandler.php");
 include(dirname(__FILE__)."/class/AjaxHandler.php");
@@ -25,18 +31,13 @@ $postHandler = new PostHandler();
 new TemplateFilter();
 
 global $globalUtils;
+$globalUtils = new GlobalUtils();
 
 global $yarAjaxHandlers;
 $yarAjaxHandlers = new YarAjaxHandler();
 
 global $yarController;
 $yarController = new YarController();
-
-global $yarConfig;
-$yarConfig = array(
-    // posts loaded for each request.
-    POST_PER_REQ => 1
-);
 
 // TODO:
 // ###### «»︽

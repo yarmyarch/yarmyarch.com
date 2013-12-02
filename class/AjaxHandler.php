@@ -217,10 +217,10 @@ class YarAjaxHandler {
     /**
      * if not category given, then try to load the whole post list, but not in "talking" just as it's in index.php.
      */
-    public function loadPost($cat = "", $id = -1) {
+    public function loadPost($request) {
         global $postHandler;
         
-        $result = $postHandler->load($cat, $id);
+        $result = $postHandler->load($request["cat"], $request["id"]);
         
         $result = array(
             'status' => 0,
