@@ -2,6 +2,11 @@
 <head>
     <title><?php
     // global configurations
+    
+    // steps changing decorations : 
+    // 1. all.js;
+    // 2. all.css;
+    // 3. TemplateFilter.php.
     global $decorationId;
     $decorationId = 2;
     
@@ -17,10 +22,9 @@
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">  
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <link rel="stylesheet" type="text/css" media="all" href="<?php bloginfo( 'stylesheet_url' ); ?>" />
-    <link rel="stylesheet" type="text/css" media="all" href="<?php bloginfo( 'template_directory', 'display' ); ?>/decoration/t_<?php echo $decorationId; ?>/style.css" />
+    <link rel="stylesheet" type="text/css" media="all" href="<?php bloginfo( 'template_directory', 'display' ); ?>/asset/css/all.css" />
 <noscript>
-    <link rel="stylesheet" type="text/css" media="all" href="<?php bloginfo( 'template_directory', 'display' ); ?>/css/noscript.css" />
+    <link rel="stylesheet" type="text/css" media="all" href="<?php bloginfo( 'template_directory', 'display' ); ?>/src/css/noscript.css" />
 </noscript>
 <?php 
 

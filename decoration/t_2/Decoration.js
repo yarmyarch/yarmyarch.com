@@ -2,7 +2,7 @@ var Decoration = (function(){
     
     var self;
     
-    var tmpRoot = "/wp-content/themes/touch the sky/",
+    var tmpRoot = "/wp-content/themes/touchTheSky/",
         decorateRoot = "decoration/t_2/imgs/";
     
     var LC = {

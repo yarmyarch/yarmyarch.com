@@ -2,7 +2,7 @@ var Page = (function(){
 
 var self;
     
-var tmpRoot = "/wp-content/themes/touch the sky/";
+var tmpRoot = "/wp-content/themes/touchTheSky/";
 
 var LC = {
     IMAGE_TIMEOUT : 10000,
@@ -27,6 +27,9 @@ var buf = {
     postIdList : [],
     // reverse of the postIdList array, that points to the index for given id.
     postIdToIndex : {},
+    
+    // would be changed in the callback of function "loadPosts".
+    loadedIdInOrder : {},
     
     // used to locate the sidebar link.
     currentPostId : false,
@@ -197,24 +200,9 @@ var handlerList = {
         if (_buf.currentPostId == id) return;
         
         // if it's not in currently loaded posts, get it via ajax.
-        if (!_util.getElementById("article_" + id)) {
-            
-            // show loading image at the proper place and locate the scroll top to it, located from _buf.postIdToIndex. XXXXXX
-            
-            _util.get(
-                _lc.AJAX_LINK 
-                + "?a=loadPost"
-                + "&cat=" + pc.category
-                + "&id=" + id,
-                function(response) {
-                    // hide loading image here and append loaded html content.
-                    console.log(response);
-                }
-            );
+        if (!_buf.loadedIdInOrder[id]) {
+            controller.loadPosts(id);
         }
-        
-        // update buffer
-        _buf.currentPostId = id;
     },
     
     // show actived post in sidebar
@@ -236,7 +224,7 @@ var handlerList = {
         
         _buf.scrollTop = scrollTop;
         
-        if (!targetPostId || !_util.getElementById("article_" + targetPostId)) return;
+        if (!targetPostId || !_buf.loadedIdInOrder[targetPostId]) return;
         
         // if target post found, try to check if it matches the rule of been figured as "actived".
         // rule for scrolling up to down: the title of the target post is smaller than or equels to 50% of the screen height;
@@ -252,7 +240,7 @@ var handlerList = {
         if (setTarget) {
             controller.setActivedPost(targetPostId);
         }
-    }, 
+    },
     
     openApiLogin : function(e) {
             
@@ -426,7 +414,7 @@ var controller = {
             response.email && (emails[i].value = _util.htmlDecode(response.email));
             
             // from api login
-            response.privateId && userNames[i].disabled = true;
+            response.privateId && (userNames[i].disabled = true);
         }
     },
     
@@ -482,6 +470,7 @@ var controller = {
     
     /**
      * try to locate to the given element, that leads the scrollTop change by the sliderUtil.
+     * @param refreshLevel : default 1.
      */
     locate : function(elemId, refreshLevel) {
         var _util = util,
@@ -490,7 +479,7 @@ var controller = {
             targetTop;
         
         if (!elem) return;
-        targetTop = _util.getTop(elem, refreshLevel) - document.documentElement.clientHeight * 0.1;
+        targetTop = _util.getTop(elem, refreshLevel || 1) - document.documentElement.clientHeight * 0.1;
         
         SlideUtil.run([scrollTop, targetTop, 0.3, 40, function(target){
             document.documentElement.scrollTop = document.body.scrollTop = target;
@@ -511,10 +500,79 @@ var controller = {
             id = posts[i].id.match(/\d+/) + "";
             _buf.postIdList[i] = id;
             _buf.postIdToIndex[id] = i;
+            
+            if (_util.getElementById("article_" + id)) {
+                _buf.loadedIdInOrder[id] = 1;
+            }
         }
         
         // set the first post as the current actived one.
         controller.setActivedPost(_buf.postIdList[0]);
+    },
+    
+    /**
+     * load series of posts via given id.
+     */
+    loadPosts : function(postId) {
+        
+        var _util = util,
+            _buf = buf,
+            _lc = LC,
+            targetPostId;
+        
+        if (_buf.loadedIdInOrder[postId]) return;
+        
+        // i <= len, targetPostId should be undefined when the loop over while no matched ones found.
+        for (var i = _buf.postIdToIndex[postId], len = _buf.postIdList.length; i <= len; ++i) {
+            targetPostId = _buf.postIdList[i];
+            if (_buf.loadedIdInOrder[targetPostId]) break;
+        }
+        
+        // show loading image at the proper place and locate the scroll top to it, located from _buf.postIdToIndex.
+        controller.showLoadingBefore(targetPostId);
+        _util.get(
+            _lc.AJAX_LINK 
+            + "?a=loadPost"
+            + "&cat=" + pc.category
+            + "&id=" + postId,
+            function(response) {
+                
+                // hide loading image here and append loaded html content.
+                // set url and history. XXXXXX
+                var contentList = response.content,
+                    html = [],
+                    _buf = buf,
+                    _cl = controller,
+                    tmpDiv = document.createElement("div"),
+                    docFrag = document.createDocumentFragment(),
+                    articleWrap = _util.getElementById("articleWrap");
+                
+                _cl.hideLoading();
+                
+                for (var i in contentList) {
+                    html.push(contentList[i]);
+                    
+                    // should be reordered later.
+                    _buf.loadedIdInOrder[i] = true;
+                }
+                
+                html = html.join("");
+                tmpDiv.innerHTML = html;
+                for (var i = 0, len = tmpDiv.childNodes.length; i < len; ++i) {
+                    docFrag.appendChild(tmpDiv.childNodes[i]);
+                }
+                delete tmpDiv;
+                
+                setTimeout(function() {
+                    if (!targetPostId) {
+                        articleWrap.appendChild(docFrag);
+                    } else {
+                        articleWrap.insertBefore(docFrag, _util.getElementById("article_" + targetPostId));
+                    }
+                    _cl.locate("article_" + postId);
+                }, 210);
+            }
+        );
     },
     
     setActivedPost : function(postId) {
@@ -524,14 +582,15 @@ var controller = {
         
         // focus the sidebar
         // toggle the last one
-        var sidePost, parentId;
+        var sidePost, lastParentId, newParentId;
         
         if (_buf.currentPostId) {
             sidePost = _util.getElementById("sidePost_" + _buf.currentPostId);
             sidePost.className = "side_post_link";
             sidePost = sidePost.parentNode;
-            parentId = sidePost.id && sidePost.id.replace(/p_sideGroup_/, "");
-            sidePost = _util.getElementById("t_sideGroup_" + parentId);
+            
+            lastParentId = sidePost.id && sidePost.id.replace(/p_sideGroup_/, "");
+            sidePost = _util.getElementById("t_sideGroup_" + lastParentId);
             sidePost && (sidePost.className = "side_menu_group");
         }
         
@@ -539,12 +598,43 @@ var controller = {
         sidePost = _util.getElementById("sidePost_" + postId);
         sidePost.className = "side_post_link active";
         sidePost = sidePost.parentNode;
-        parentId = sidePost.id && sidePost.id.replace(/p_sideGroup_/, "");
-        sidePost = _util.getElementById("t_sideGroup_" + parentId);
+        
+        newParentId = sidePost.id && sidePost.id.replace(/p_sideGroup_/, "");            
+        sidePost = _util.getElementById("t_sideGroup_" + newParentId);
         sidePost && (sidePost.className = "side_menu_group active");
+        
+        if (lastParentId && lastParentId != newParentId) {
+            PageUtil.toggleSlide(document.getElementById("p_sideGroup_" + lastParentId));
+            PageUtil.toggleSlide(document.getElementById("p_sideGroup_" + newParentId));
+        }
         
         // update buffer
         _buf.currentPostId = postId;
+    },
+    
+    /**
+     * showloading page at a specific position.
+     */
+    showLoadingBefore : function(postId) {
+        var _util = util,
+            _buf = buf,
+            loadingWrap = _util.getElementById("loading"),
+            articleWrap = _util.getElementById("articleWrap");
+        
+        if (!postId) {
+            articleWrap.appendChild(loadingWrap);
+        } else {
+            articleWrap.insertBefore(loadingWrap, _util.getElementById("article_" + postId));
+        }
+        
+        loadingWrap.style.display = "";
+        setTimeout(function(){
+            loadingWrap.className = "loading in_article active";
+        }, 0);
+    },
+    
+    hideLoading : function() {
+        util.getElementById("loading").className = "loading in_article";
     }
 };
 

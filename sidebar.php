@@ -5,11 +5,7 @@
  */
 ?>
 <div class="sidebar" id="sidebar">
-    <?php if ( is_active_sidebar( 'sidebar-1' ) ) : ?>
-        <div id="secondary" class="widget-area">
-            <?php dynamic_sidebar( 'sidebar-1' ); ?>
-        </div>
-    <?php endif; 
+    <?php
     // them by categories->monthes->posts.
     
     $layeredMenu;
@@ -77,4 +73,10 @@
     <span class="open_api_login oal_sina" name="openApiLogin" id="openApiLogin_sina"></span>
     <span class="open_api_login oal_renren" name="openApiLogin" id="openApiLogin_renren"></span>
     -->
+    
+    <?php if ( is_active_sidebar( 'sidebar-1' ) ) : ?>
+        <div id="secondary" class="widget-area">
+            <?php dynamic_sidebar( 'sidebar-1' ); ?>
+        </div>
+    <?php endif; ?>
 </div>

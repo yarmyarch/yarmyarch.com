@@ -7,7 +7,7 @@
 get_header();?>
 
 <div class="content" id="content">
-    <div class="article-wrap">
+    <div class="article-wrap" id="articleWrap">
     <?php
         // Only generate posts from category about cycling.
         global $postHandler;

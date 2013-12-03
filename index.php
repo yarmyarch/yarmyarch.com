@@ -2,7 +2,7 @@
 get_header();?>
 
 <div class="content" id="content">
-    <div class="article-wrap">
+    <div class="article-wrap" id="articleWrap">
     <?php
         // should generate posts in all categories with ajax, and a main picture at the home page.
         global $postHandler;

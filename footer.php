@@ -8,16 +8,9 @@
 
 <?php 
     do_action("yar_footer");
-    global $decorationId;
 ?>
-<script type="text/javascript" src="<?php echo get_template_directory_uri(); ?>/js/PageUtil.js"></script>
-<script type="text/javascript" src="<?php echo get_template_directory_uri(); ?>/js/User.js"></script>
-<script type="text/javascript" src="<?php echo get_template_directory_uri(); ?>/js/YarAjax.js"></script>
-<script type="text/javascript" src="<?php echo get_template_directory_uri(); ?>/js/OpenAPI.js.php"></script>
-<script type="text/javascript" src="<?php echo get_template_directory_uri(); ?>/js/SlideUtil.js"></script>
-<script type="text/javascript" src="<?php echo get_template_directory_uri(); ?>/js/ScrollUtil.js"></script>
-<script type="text/javascript" src="<?php echo get_template_directory_uri(); ?>/decoration/t_<?php echo $decorationId; ?>/Decoration.js"></script>
-<script type="text/javascript" src="<?php echo get_template_directory_uri(); ?>/js/Page.js"></script>
+<script type="text/javascript" src="<?php echo get_template_directory_uri(); ?>/asset/js/all.js"></script>
+<script type="text/javascript" src="<?php echo get_template_directory_uri(); ?>/src/js/OpenAPI.js.php"></script>
 
 <script type="text/javascript">
 var _gaq = _gaq || [];_gaq.push(['_setAccount', 'UA-30956439-1']);_gaq.push(['_setDomainName', 'yarmyarch.com']);_gaq.push(['_trackPageview']);
