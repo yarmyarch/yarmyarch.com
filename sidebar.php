@@ -34,7 +34,7 @@
                 "id" => "sideGroup_".$group,
                 "title" => $group,
                 // page to the first post of this group.
-                "link" => get_permalink($post->ID),
+                "link" => $post->link,
                 "posts" => array()
             );
         }
@@ -42,7 +42,7 @@
             // give it a post id for locating.
             "id" => "sidePost_".$post->ID,
             "title" => htmlspecialchars($post->post_title),
-            "link" => get_permalink($post->ID)
+            "link" => $post->link
         ));
     }
     

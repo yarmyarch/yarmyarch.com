@@ -9,7 +9,7 @@
         <?php
             $title = apply_filters("the_title ", $post->post_title);
         ?>
-        <a id="articleLink_<?php echo $postId; ?>" class="article_title_link" href="<?php echo get_permalink($post->ID); ?>" title="<?php echo $title; ?>" onclick="javascript:return false;"><?php echo $title; ?></a>
+        <a id="articleLink_<?php echo $postId; ?>" class="article_title_link" href="<?php echo $post->link; ?>" title="<?php echo $title; ?>" onclick="javascript:return false;"><?php echo $title; ?></a>
         <div class="article_date">
         <?php
             echo apply_filters("the_title ", $post->post_date_gmt);

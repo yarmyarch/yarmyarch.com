@@ -206,7 +206,7 @@ var handlerList = {
     },
     
     // show actived post in sidebar
-    locatePostInSidebar : function(e) {
+    locatePostInScroll : function(e) {
         var _buf = buf,
             _util = util,
             scrollTop = document.documentElement.scrollTop || document.body.scrollTop,
@@ -224,7 +224,13 @@ var handlerList = {
         
         _buf.scrollTop = scrollTop;
         
-        if (!targetPostId || !_buf.loadedIdInOrder[targetPostId]) return;
+        if (!targetPostId) return;
+        
+        if (!_buf.loadedIdInOrder[targetPostId]) {
+            // preload
+            controller.loadPosts(targetPostId, 1);
+            return;
+        }
         
         // if target post found, try to check if it matches the rule of been figured as "actived".
         // rule for scrolling up to down: the title of the target post is smaller than or equels to 50% of the screen height;
@@ -393,7 +399,7 @@ var controller = {
         self.addEventListenerByClassName("article_title_link", "onclick", _hl.locatePost);
         self.addEventListenerByClassName("side_post_link", "onclick", _hl.locatePost);
         
-        _util.addEventListener(window, "scroll", _hl.locatePostInSidebar);
+        _util.addEventListener(window, "scroll", _hl.locatePostInScroll);
     },
     
     updateUserInfo : function(response) {
@@ -513,7 +519,7 @@ var controller = {
     /**
      * load series of posts via given id.
      */
-    loadPosts : function(postId) {
+    loadPosts : function(postId, noLocate) {
         
         var _util = util,
             _buf = buf,
@@ -538,7 +544,6 @@ var controller = {
             function(response) {
                 
                 // hide loading image here and append loaded html content.
-                // set url and history. XXXXXX
                 var contentList = response.content,
                     html = [],
                     _buf = buf,
@@ -550,10 +555,10 @@ var controller = {
                 _cl.hideLoading();
                 
                 for (var i in contentList) {
-                    html.push(contentList[i]);
-                    
-                    // should be reordered later.
-                    _buf.loadedIdInOrder[i] = true;
+                    if (!_buf.loadedIdInOrder[i]) {
+                        html.push(contentList[i]);
+                        _buf.loadedIdInOrder[i] = true;
+                    }
                 }
                 
                 html = html.join("");
@@ -569,7 +574,7 @@ var controller = {
                     } else {
                         articleWrap.insertBefore(docFrag, _util.getElementById("article_" + targetPostId));
                     }
-                    _cl.locate("article_" + postId);
+                    if (!noLocate) _cl.locate("article_" + postId);
                 }, 210);
             }
         );
@@ -752,6 +757,8 @@ return self = {
         
         // init existing post list via className.
         controller.initPostList();
+        
+        handlerList.locatePostInScroll();
     }
 };
 })();

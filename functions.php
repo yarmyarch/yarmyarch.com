@@ -12,7 +12,7 @@ ini_set('display_errors', '1');
 global $yarConfig;
 $yarConfig = array(
     // posts loaded for each request.
-    POST_PER_REQ => 1
+    POST_PER_REQ => 3
 );
 
 include(dirname(__FILE__)."/class/GlobalUtils.php");
@@ -40,12 +40,7 @@ global $yarController;
 $yarController = new YarController();
 
 // TODO:
-// ###### «»︽
-// ### post titles
-// ### sidebar css
-// how to locate permalink to each article?
-
-// after verified : 
-// templateFilter, normalHeaderAction;
+// XXXXXX «»︽
+// set url and history. XXXXXX
 
 ?>

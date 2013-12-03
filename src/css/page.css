@@ -24,10 +24,12 @@ applet {
     opacity:0.4;
     position:relative;
     height:200px;
+    margin-bottom:10%;
 }
 .in_article#loading {
     position:relative;
     height:0px;
+    margin-bottom:0%;
 }
 
 /**### css for show ###**/

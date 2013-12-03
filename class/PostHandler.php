@@ -57,11 +57,11 @@ class PostHandler {
     
     public function load($categoryName = "", $id = -1) {
         global $yarConfig;
+        global $globalUtils;
         
         if (!$categoryName) {
             $posts = get_posts(array('category__not_in' => array($globalUtils->getCategoryBySlug("talking")->term_id)));
         } else {
-            global $globalUtils;
             $posts = $globalUtils->getPostsByCategoryName($categoryName);
         }
         
@@ -77,6 +77,17 @@ class PostHandler {
         ob_start();
         foreach($posts as $post) {
             
+            // set post link.
+            if (!$categoryName) {
+                $post->link = get_permalink($post->ID);
+            } else {
+                $category = $globalUtils->getPostCategory($post->ID);
+                $post->link = get_bloginfo("url")."/".$category->slug."?p=".$post->ID;
+            }
+            
+            // load limited post only.
+            if ($postCount >= $yarConfig["POST_PER_REQ"]) continue;
+            
             if ($id != -1 && $post->ID != $id && !$start) {
                 continue;
             } elseif ($post->ID == $id) {
@@ -90,9 +101,6 @@ class PostHandler {
             // load content to the result array
             $contents[$post->ID] = ob_get_contents();
             ob_clean();
-            
-            // load limited post only.
-            if ($postCount >= $yarConfig["POST_PER_REQ"]) break;
         }
         ob_end_clean();
         
