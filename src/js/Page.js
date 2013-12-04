@@ -882,7 +882,17 @@ return self = {
         
         // init bind on scroll
         ScrollUtil.init();
-        //~ ScrollUtil.bindOnScroll(util.getElementById("sidebar"));
+        ScrollUtil.bindOnScroll(util.getElementById("sidebar"), function(){
+            util.getElementById("sidebar").style.cssText = 'transition:none;';
+            setTimeout(function(){
+                util.getElementById("sidebar").style.cssText = 'transition:none;position: fixed;right: 10%;width: 28.2%;top: 0;';
+            }, 0);
+        }, function(){
+            util.getElementById("sidebar").style.cssText = 'transition:none;';
+            setTimeout(function(){
+                util.getElementById("sidebar").style.cssText = '';
+            }, 0);
+        });
         
         // init existing post list via className.
         controller.initPostList();
