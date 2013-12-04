@@ -126,7 +126,7 @@ var OpenApi = (function() {
             _buf.iframeOpened = false;
             
             if (_buf.iframeShouldDisplay) {
-                _util.addClass(loginWrap, "float_active", controller.toggleLoginWrap);
+                _util.addClass(loginWrap, "active", controller.toggleLoginWrap);
                 _buf.iframeShouldDisplay = false;
             }
             

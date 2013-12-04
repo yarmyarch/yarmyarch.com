@@ -195,7 +195,8 @@ var handlerList = {
             _util = util,
             _buf = buf,
             _lc = LC,
-            _cl = controller;
+            _cl = controller, 
+            postLink = _util.getElementById("sidePost_" + id);
         _cl.locate("article_" + id);
         
         if (_buf.currentPostId == id) return;
@@ -207,6 +208,9 @@ var handlerList = {
         
         // prevent auto-load while auto-locating.
         _cl.setActivedPost(id);
+        
+        // pjax part.
+        window.history.pushState({ postId : id }, postLink.innerHTML, postLink.href);
     },
     
     // show actived post in sidebar
@@ -219,14 +223,14 @@ var handlerList = {
             isUpToDown = false;
         
         // refresh arrows.
-        if (_buf.postIdToIndex[_buf.currentPostId] == 0 || _buf.currentPostId != _cl.getLastPostId()) {
+        if (_buf.postIdToIndex[_buf.currentPostId] == 0 && _buf.currentPostId != _cl.getLastPostId()) {
             _util.getElementById("left").className = "arrow";
             _util.getElementById("top").className = "arrow";
         } else {
             _util.getElementById("left").className = "arrow active";
             _util.getElementById("top").className = "arrow active";
         }
-        if (_buf.postIdToIndex[_buf.currentPostId] == _buf.postIdToIndex.length - 1 || _buf.currentPostId != _cl.getFirstPostId()) {
+        if (_buf.postIdToIndex[_buf.currentPostId] == _buf.postIdList.length - 1 && _buf.currentPostId != _cl.getFirstPostId()) {
             _util.getElementById("right").className = "arrow";
             _util.getElementById("bottom").className = "arrow";
         } else {
@@ -249,7 +253,7 @@ var handlerList = {
         
         if (!_buf.loadedIdInOrder[targetPostId]) {
             // preload
-            _cl.loadPosts(targetPostId, 1);
+            _cl.loadPosts(targetPostId, _buf.currentPostId);
             return;
         }
         
@@ -362,7 +366,9 @@ var handlerList = {
     // pjax part.
     goHistory : function(e) {
         var e = e || window.event;
-        controller.locate("article_" + e.state.postId);
+        if (e.state && e.state.postId) {
+            controller.locate("article_" + e.state.postId);
+        }
     }
     
 };
@@ -640,7 +646,7 @@ var controller = {
             targetPostId;
         
         // i <= len, targetPostId should be undefined when the loop over while no matched ones found.
-        for (var i = _buf.postIdToIndex[postId], len = _buf.postIdList.length; i <= len; ++i) {
+        for (var i = _buf.postIdToIndex[postId] + 1, len = _buf.postIdList.length; i <= len; ++i) {
             targetPostId = _buf.postIdList[i];
             if (_buf.loadedIdInOrder[targetPostId]) break;
         }
@@ -651,7 +657,7 @@ var controller = {
     /**
      * load series of posts via given id.
      */
-    loadPosts : function(postId, noLocate) {
+    loadPosts : function(postId, locateTo) {
         
         var _util = util,
             _buf = buf,
@@ -701,7 +707,11 @@ var controller = {
                     } else {
                         articleWrap.insertBefore(docFrag, _util.getElementById("article_" + targetPostId));
                     }
-                    if (!noLocate) _cl.locate("article_" + postId);
+                    if (!locateTo) {
+                        _cl.locate("article_" + postId);
+                    } else {
+                        _cl.locate("article_" + locateTo);
+                    }
                 }, 210);
             }
         );
@@ -714,7 +724,7 @@ var controller = {
         
         // focus the sidebar
         // toggle the last one
-        var sidePost, lastParentId, newParentId, postLink = _util.getElementById("articleLink_" + postId);
+        var sidePost, lastParentId, newParentId;
         
         if (_buf.currentPostId) {
             sidePost = _util.getElementById("sidePost_" + _buf.currentPostId);
@@ -742,8 +752,6 @@ var controller = {
         
         // update buffer
         _buf.currentPostId = postId;
-        // pjax part.
-        window.history.pushState({ postId : postId }, postLink.innerHTML, postLink.href);
     },
     
     /**
@@ -900,7 +908,9 @@ return self = {
         handlerList.locatePostInScroll();
         // init the bottom flag for slide.
         handlerList.resetBottomFlag();
-    }
+    },
+    
+    buf : buf
 };
 })();
 
