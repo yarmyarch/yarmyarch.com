@@ -126,13 +126,13 @@ var OpenApi = (function() {
             _buf.iframeOpened = false;
             
             if (_buf.iframeShouldDisplay) {
-                _util.addClass(loginWrap, "active", controller.toggleLoginWrap);
+                _util.addClass(loginWrap, "float_active", controller.toggleLoginWrap);
                 _buf.iframeShouldDisplay = false;
             }
             
             loginWrap.onclick = function(e) {
                 controller.closeRequestFrame();
-                _util.removeClass(_util.getElementById("loading"), "active", _util.toggleDisplay);
+                _util.removeClass(_util.getElementById("loading"), "float_active", _util.toggleDisplay);
                 loginWrap.onclick.onclick = "";
             }
         },
@@ -254,7 +254,7 @@ var OpenApi = (function() {
                 self[handler](param);
             } else {
                 // hide the loading mask.
-                _util.removeClass(_util.getElementById("loading"), "active", _util.toggleDisplay);
+                _util.removeClass(_util.getElementById("loading"), "float_active", _util.toggleDisplay);
                 _buf.callbackFunc && _buf.callbackFunc(
                     (_hl.callbackFilter[param.yarType] && _hl.callbackFilter[param.yarType](param))
                 );
@@ -274,7 +274,7 @@ var OpenApi = (function() {
             if (!link) return;
             
             if (param.yarDisplay) {
-                _util.addClass(loading, "active", _util.toggleDisplay);
+                _util.addClass(loading, "float_active", _util.toggleDisplay);
                 _buf.iframeShouldDisplay = true;
             }
             

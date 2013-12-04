@@ -40,7 +40,7 @@ global $yarController;
 $yarController = new YarController();
 
 // TODO:
-// XXXXXX «»︽
-// set url and history. XXXXXX
+// QUOAT
+// oo/xx action
 
 ?>

@@ -273,7 +273,9 @@ var handlerList = {
             
         var target = e.targt || e.srcElement,
             id = target.id.match(/\d+/),
-            type = target.id.match(/openApiLogin_(\w+)/)[1];
+            type = target.id.match(/openApiLogin_(\w+)_/)[1];
+            
+        type = type || target.id.match(/openApiLogin_(\w+)/)[1];
         
         OpenApi.request({a : "login", yarType : type, yarDisplay : 1}, function(response) {
             // in case of error
@@ -322,7 +324,7 @@ var handlerList = {
             _cl = controller;
         if (util.getElementById("left").className.match(/active/) && targetPostId) {
             _cl.setActivedPost(targetPostId);
-            _cl.locate("article_" + targetPostId, 1);
+            _cl.locate("article_" + targetPostId);
         }
     },
     
@@ -332,7 +334,7 @@ var handlerList = {
             _cl = controller;
         if (util.getElementById("right").className.match(/active/) && targetPostId) {
             _cl.setActivedPost(targetPostId);
-            _cl.locate("article_" + targetPostId, 1);
+            _cl.locate("article_" + targetPostId);
         }
     },
     
@@ -340,7 +342,7 @@ var handlerList = {
         var _cl = controller;
         if (util.getElementById("top").className.match(/active/)) {
             _cl.setActivedPost(_cl.getFirstPostId());
-            _cl.locate("mainWrap", 1);
+            _cl.locate("mainWrap");
         }
     },
     
@@ -349,13 +351,20 @@ var handlerList = {
         if (util.getElementById("bottom").className.match(/active/)) {
             var lastPostId = _cl.getLastPostId();
             _cl.setActivedPost(lastPostId);
-            _cl.locate("bottomClear", 1);
+            _cl.locate("bottomClear");
         }
     },
     
     resetBottomFlag : function() {
         util.getElementById("bottomClear").style.bottom = document.documentElement.clientHeight + "px";
+    },
+    
+    // pjax part.
+    goHistory : function(e) {
+        var e = e || window.event;
+        controller.locate("article_" + e.state.postId);
     }
+    
 };
 
 var controller = {
@@ -463,6 +472,7 @@ var controller = {
         
         _util.addEventListener(window, "scroll", _hl.locatePostInScroll);
         _util.addEventListener(window, "resize", _hl.resetBottomFlag);
+        _util.addEventListener(window, "popstate", _hl.goHistory);
         
         // events to arrows
         _util.addEventListener(_util.getElementById("left"), "click", _hl.slideLeft);
@@ -704,7 +714,7 @@ var controller = {
         
         // focus the sidebar
         // toggle the last one
-        var sidePost, lastParentId, newParentId;
+        var sidePost, lastParentId, newParentId, postLink = _util.getElementById("articleLink_" + postId);
         
         if (_buf.currentPostId) {
             sidePost = _util.getElementById("sidePost_" + _buf.currentPostId);
@@ -732,6 +742,8 @@ var controller = {
         
         // update buffer
         _buf.currentPostId = postId;
+        // pjax part.
+        window.history.pushState({ postId : postId }, postLink.innerHTML, postLink.href);
     },
     
     /**
