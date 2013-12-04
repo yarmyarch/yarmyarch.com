@@ -1,4 +1,4 @@
-body{ margin:0; padding:0; font-size:1em; font-family:微软雅黑; color:#333; }
+body{ margin:0; padding:0; font-size:1em; font-family:"Microsoft YaHei","Hiragino Sans GB W3",Tahoma,Arial; color:#333; }
 .clear { height:0; border:0; padding:0; margin:0; line-height:0; clear:both; }
 a { text-decoration:none; }
 a:hover { text-decoration:none; }
@@ -113,18 +113,13 @@ applet {
     bottom:3%; 
     color:#FFF; 
     z-index:1000; 
-    font-size:0.8em; 
-    color:transparent;
+    font-size:0.8em;
     color:#e8e8e8\0;
     text-shadow:0px 0px 4px #000;
     max-width: 32%;
     opacity:0;
     
     transition:opacity 0.2s linear, color 0.2s linear;
-}
-#copyRight:hover { 
-    color:#FFF;
-    text-shadow:0px 0px 4px #000;
 }
 #copyRight.active {
     opacity:1;
@@ -877,6 +872,68 @@ applet {
 
 /* end css for login section */
 
+/*### css for arrows ###*/
+.arrow_wrap {
+    position: fixed;
+    right: 10%;
+    bottom: 20%;
+    height: 86px;
+    width: 168px;
+    z-index:1;
+}
+.arrow {
+    position: absolute;
+    height: 80px;
+    top: 50%;
+    background: transparent;
+    text-align: center;
+    font-size: 8em;
+    color: transparent;
+    cursor: pointer;
+    line-height: 58px;
+    overflow: hidden;
+    opacity: .4;
+    margin-top: -40px;
+    
+    text-shadow: 0 0 24px #000;
+    transition: .2s all linear;
+}
+.arrow.active {
+    color:#FFF;
+    text-shadow: 0 0 12px #000;
+}
+.arrow.active:hover {
+    opacity:0.8;
+}
+#left {
+    left: 0%;
+}
+#right {
+    right: 0%;
+}
+#top {
+    line-height: 14px;
+    font-size: 5em;
+    height: 44px;
+    top: 0%;
+    left: 50%;
+    margin-left: -40px;
+    margin-top: 0;
+}
+#bottom {
+    line-height: 70px;
+    font-size: 5em;
+    height: 44px;
+    bottom: 0;
+    left: 50%;
+    margin-left: -40px;
+    margin-top: 0;
+}
+#bottomClear {
+    position:absolute;
+}
+/* end css for arrows */
+
 /*### css for animations ###*/
 @-webkit-keyframes ani_bicycle {
     0% {
@@ -1483,6 +1540,15 @@ applet {
     }
     #loading.in_article {
         height:60px;
+    }
+    .arrow_wrap {
+        width: 142px;
+    }
+    #top {
+        margin-left: -32px;
+    }
+    #bottom {
+        margin-left: -32px;
     }
 }
 /* IE10-specific */

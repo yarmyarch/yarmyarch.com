@@ -194,24 +194,45 @@ var handlerList = {
             id = target.id.match(/\d+/)[0],
             _util = util,
             _buf = buf,
-            _lc = LC;
-        controller.locate("article_" + id);
+            _lc = LC,
+            _cl = controller;
+        _cl.locate("article_" + id);
         
         if (_buf.currentPostId == id) return;
         
         // if it's not in currently loaded posts, get it via ajax.
         if (!_buf.loadedIdInOrder[id]) {
-            controller.loadPosts(id);
+            _cl.loadPosts(id);
         }
+        
+        // prevent auto-load while auto-locating.
+        _cl.setActivedPost(id);
     },
     
     // show actived post in sidebar
     locatePostInScroll : function(e) {
         var _buf = buf,
             _util = util,
+            _cl = controller,
             scrollTop = document.documentElement.scrollTop || document.body.scrollTop,
             targetPostId = _buf.postIdToIndex[_buf.currentPostId],
             isUpToDown = false;
+        
+        // refresh arrows.
+        if (_buf.postIdToIndex[_buf.currentPostId] == 0 || _buf.currentPostId != _cl.getLastPostId()) {
+            _util.getElementById("left").className = "arrow";
+            _util.getElementById("top").className = "arrow";
+        } else {
+            _util.getElementById("left").className = "arrow active";
+            _util.getElementById("top").className = "arrow active";
+        }
+        if (_buf.postIdToIndex[_buf.currentPostId] == _buf.postIdToIndex.length - 1 || _buf.currentPostId != _cl.getFirstPostId()) {
+            _util.getElementById("right").className = "arrow";
+            _util.getElementById("bottom").className = "arrow";
+        } else {
+            _util.getElementById("right").className = "arrow active";
+            _util.getElementById("bottom").className = "arrow active";
+        }
         
         // scrolling from top to bottom, check next related post.
         if (scrollTop >= _buf.scrollTop) {
@@ -228,7 +249,7 @@ var handlerList = {
         
         if (!_buf.loadedIdInOrder[targetPostId]) {
             // preload
-            controller.loadPosts(targetPostId, 1);
+            _cl.loadPosts(targetPostId, 1);
             return;
         }
         
@@ -237,14 +258,14 @@ var handlerList = {
         // rule for scrolling down to up: the title of the current post is bigger than or equels to 30% of the screen height.
         // if rules matched, then set target as current actived post, otherwise do nothing.
         var setTarget = false,
-            halfScreenHeight = document.documentElement.clientHeight * 0.5;
+            screenHeight = document.documentElement.clientHeight;
         
         // refresh layer : 1
-        setTarget = setTarget || (isUpToDown && _util.getTop(_util.getElementById("article_" + targetPostId), 1) <= halfScreenHeight + scrollTop);
-        setTarget = setTarget || (!isUpToDown && _util.getTop(_util.getElementById("article_" + _buf.currentPostId), 1) >= halfScreenHeight + scrollTop);
+        setTarget = setTarget || (isUpToDown && _util.getTop(_util.getElementById("article_" + targetPostId), 1) <= screenHeight * 0.5 + scrollTop);
+        setTarget = setTarget || (!isUpToDown && _util.getTop(_util.getElementById("article_" + _buf.currentPostId), 1) >= screenHeight * 0.5 + scrollTop);
         
         if (setTarget) {
-            controller.setActivedPost(targetPostId);
+            _cl.setActivedPost(targetPostId);
         }
     },
     
@@ -293,6 +314,47 @@ var handlerList = {
                 .replace(/%d%/, LC.MAX_TEXT_COUNT - target.value.length)
             );
         }
+    },
+    
+    slideLeft : function(e) {
+        var _buf = buf,
+            targetPostId = controller.getPrevPostId(_buf.currentPostId),
+            _cl = controller;
+        if (util.getElementById("left").className.match(/active/) && targetPostId) {
+            _cl.setActivedPost(targetPostId);
+            _cl.locate("article_" + targetPostId, 1);
+        }
+    },
+    
+    slideRight : function(e) {
+        var _buf = buf,
+            targetPostId = controller.getNextPostId(_buf.currentPostId),
+            _cl = controller;
+        if (util.getElementById("right").className.match(/active/) && targetPostId) {
+            _cl.setActivedPost(targetPostId);
+            _cl.locate("article_" + targetPostId, 1);
+        }
+    },
+    
+    slideTop : function(e) {
+        var _cl = controller;
+        if (util.getElementById("top").className.match(/active/)) {
+            _cl.setActivedPost(_cl.getFirstPostId());
+            _cl.locate("mainWrap", 1);
+        }
+    },
+    
+    slideBottom : function(e) {
+        var _cl = controller;
+        if (util.getElementById("bottom").className.match(/active/)) {
+            var lastPostId = _cl.getLastPostId();
+            _cl.setActivedPost(lastPostId);
+            _cl.locate("bottomClear", 1);
+        }
+    },
+    
+    resetBottomFlag : function() {
+        util.getElementById("bottomClear").style.bottom = document.documentElement.clientHeight + "px";
     }
 };
 
@@ -400,6 +462,13 @@ var controller = {
         self.addEventListenerByClassName("side_post_link", "onclick", _hl.locatePost);
         
         _util.addEventListener(window, "scroll", _hl.locatePostInScroll);
+        _util.addEventListener(window, "resize", _hl.resetBottomFlag);
+        
+        // events to arrows
+        _util.addEventListener(_util.getElementById("left"), "click", _hl.slideLeft);
+        _util.addEventListener(_util.getElementById("right"), "click", _hl.slideRight);
+        _util.addEventListener(_util.getElementById("top"), "click", _hl.slideTop);
+        _util.addEventListener(_util.getElementById("bottom"), "click", _hl.slideBottom);
     },
     
     updateUserInfo : function(response) {
@@ -516,6 +585,59 @@ var controller = {
         controller.setActivedPost(_buf.postIdList[0]);
     },
     
+    getFirstPostId : function() {
+        
+        var _buf = buf,
+            targetPostId;
+        
+        for (var i = 0, len = _buf.postIdList.length; i < len; ++i) {
+            targetPostId = _buf.postIdList[i];
+            if (_buf.loadedIdInOrder[targetPostId]) break;
+        }
+        
+        return targetPostId;
+    },
+    
+    getLastPostId : function() {
+        
+        var _buf = buf,
+            targetPostId;
+        
+        for (var i = _buf.postIdList.length - 1; i >= 0; --i) {
+            targetPostId = _buf.postIdList[i];
+            if (_buf.loadedIdInOrder[targetPostId]) break;
+        }
+        
+        return targetPostId;
+    },
+    
+    getPrevPostId : function(postId) {
+        
+        var _buf = buf,
+            targetPostId;
+        
+        for (var i = _buf.postIdToIndex[postId] - 1; i >= 0; --i) {
+            targetPostId = _buf.postIdList[i];
+            if (_buf.loadedIdInOrder[targetPostId]) break;
+        }
+        
+        return targetPostId;
+    },
+    
+    getNextPostId : function(postId) {
+        
+        var _buf = buf,
+            targetPostId;
+        
+        // i <= len, targetPostId should be undefined when the loop over while no matched ones found.
+        for (var i = _buf.postIdToIndex[postId], len = _buf.postIdList.length; i <= len; ++i) {
+            targetPostId = _buf.postIdList[i];
+            if (_buf.loadedIdInOrder[targetPostId]) break;
+        }
+        
+        return targetPostId;
+    },
+    
     /**
      * load series of posts via given id.
      */
@@ -524,18 +646,13 @@ var controller = {
         var _util = util,
             _buf = buf,
             _lc = LC,
-            targetPostId;
+            _cl = controller,
+            targetPostId = _cl.getNextPostId(postId);
         
         if (_buf.loadedIdInOrder[postId]) return;
         
-        // i <= len, targetPostId should be undefined when the loop over while no matched ones found.
-        for (var i = _buf.postIdToIndex[postId], len = _buf.postIdList.length; i <= len; ++i) {
-            targetPostId = _buf.postIdList[i];
-            if (_buf.loadedIdInOrder[targetPostId]) break;
-        }
-        
         // show loading image at the proper place and locate the scroll top to it, located from _buf.postIdToIndex.
-        controller.showLoadingBefore(targetPostId);
+        _cl.showLoadingBefore(targetPostId);
         _util.get(
             _lc.AJAX_LINK 
             + "?a=loadPost"
@@ -759,6 +876,8 @@ return self = {
         controller.initPostList();
         
         handlerList.locatePostInScroll();
+        // init the bottom flag for slide.
+        handlerList.resetBottomFlag();
     }
 };
 })();

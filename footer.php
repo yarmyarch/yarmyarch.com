@@ -1,9 +1,16 @@
+    <div class="clear" id="bottomClear"></div>
 </div>
 <div id="copyRight">
     ☺ 2013. All rights reserved. By yarmyarch@live.cn<br>
     Nothing else.
 </div>
 <div class="loading" id="loading"></div>
+<div class="arrow_wrap">
+    <div class="arrow" id="left">‹</div>
+    <div class="arrow" id="right">›</div>
+    <div class="arrow" id="top">︿</div>
+    <div class="arrow" id="bottom">﹀</div>
+</div>
 <div class="login_wrap" id="loginWrap" style="display:none;"><div class="login_wrap_inner"><div id="loginInner"><div id="loginClose">×</div></div></div></div>
 
 <?php 

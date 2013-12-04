@@ -8,7 +8,11 @@ get_header();?>
         global $postHandler;
         global $wp_query;
         
-        $postInfo = $postHandler->load("", $wp_query->post->ID);
+        $postId = $wp_query->post->ID;
+        $postId = $wp_query->is_home ? -1 : $postId;
+        $postId = $wp_query->is_page ? -1 : $postId;
+        
+        $postInfo = $postHandler->load("", $postId);
         echo $postInfo["contents"];
         // posts for sidebar
         $posts = $postInfo["posts"];
