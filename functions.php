@@ -42,6 +42,5 @@ $yarController = new YarController();
 // TODO:
 // QUOAT
 // oo/xx action
-// but that flashes double time.
 
 ?>

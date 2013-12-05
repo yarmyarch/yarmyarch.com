@@ -29,10 +29,12 @@
             <div class="user_info_item"><?php _e("邮箱：", "yarmyarch"); ?>
                 <input type="text" id="email_<?php echo $postId; ?>" name="email" maxlength="48" value="<?php echo $email; ?>" title="<?php _e("随便写个，以便紧急情况例如地球即将爆炸之前我可以给您发来最诚挚的慰问", "yarmyarch"); ?>" />
             </div>
+            <!--
             <strong><?php _e("或", "yarmyarch"); ?></strong><?php _e("使用其他账号登录：", "yarmyarch"); ?>
             <span class="open_api_login oal_qq" name="openApiLogin" id="openApiLogin_qq_<?php echo $postId; ?>"></span>
             <span class="open_api_login oal_sina" name="openApiLogin" id="openApiLogin_sina_<?php echo $postId; ?>"></span>
             <span class="open_api_login oal_renren" name="openApiLogin" id="openApiLogin_renren_<?php echo $postId; ?>"></span>
+            -->
         </div>
         
         <textarea class="comment_textarea" id="content_<?php echo $postId; ?>"></textarea>

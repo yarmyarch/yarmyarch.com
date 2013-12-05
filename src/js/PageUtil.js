@@ -16,7 +16,9 @@ var buf = {
     topList : {},
     leftList : {},
     
-    getStyleBuffer : {}
+    getStyleBuffer : {},
+    
+    showSlideTimer : false
 };
 
 return self = {
@@ -131,6 +133,7 @@ return self = {
         var duration = (param && param.duration) || LC.ANIMATION_INTERNAL / 1000,
             _buf = buf;
         
+        if (_buf.slideStatus[elem.id]) return;
         _buf.slideStatus[elem.id] = true;
         
         elem.style.height = "0px";
@@ -143,7 +146,7 @@ return self = {
             elem.style.height = elem.scrollHeight + "px";
             elem.style.opacity = (param && param.opacity) || "1";
             
-            setTimeout(function(){
+            _buf.showSlideTimer = setTimeout(function(){
                 elem.style.transition = "none";
                 elem.style.height = "";
                 elem.style.overflow = "";
@@ -155,11 +158,13 @@ return self = {
         
         var duration = (param && param.duration) || LC.ANIMATION_INTERNAL / 1000;
         
+        if (!buf.slideStatus[elem.id]) return;
         buf.slideStatus[elem.id] = false;
         
         elem.style.transition = "none";
         elem.style.height = elem.scrollHeight + "px";
         setTimeout(function() {
+            clearTimeout(buf.showSlideTimer);
             elem.style.transition = "all " + duration + "s linear";
             elem.style.overflow = "hidden";
             elem.style.height = "0px";
@@ -222,7 +227,7 @@ return self = {
     },
     
     addEventListener : function(target, eventName, handler) {
-        var pureEventName = eventName.replace(/$on/, "");
+        var pureEventName = eventName.replace(/^on/, "");
         eventName = "on" + pureEventName;
         
         if (target.addEventListener) {
@@ -233,7 +238,7 @@ return self = {
     },
     
     removeEventListener : function(target, eventName, handler) {
-        var pureEventName = eventName.replace(/$on/, "");
+        var pureEventName = eventName.replace(/^on/, "");
         eventName = "on" + pureEventName;
         
         if (target.removeEventListener) {
@@ -325,6 +330,15 @@ return self = {
             }
         }
         return _buf.getStyleBuffer[id] = result || "";
+    },
+    
+    isDomIn : function(child, parent) {
+        var tmp = child;
+        while (tmp) {
+            if (tmp == parent) return true;
+            tmp = tmp.parentNode;
+        }
+        return false;
     }
 };
 

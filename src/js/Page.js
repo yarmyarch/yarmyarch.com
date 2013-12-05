@@ -40,14 +40,8 @@ var buf = {
 var util = PageUtil;
 
 var handlerList = {
-    classEventHandler : {
-        onclick : {},
-        onkeyup : {}
-    },
-    idEventHandler : {
-        onclick : {},
-        onkeyup : {}
-    },
+    classEventHandler : {},
+    idEventHandler : {},
     
     validator : {
         notNull : function(field, value) {
@@ -203,10 +197,9 @@ var handlerList = {
         
         // if it's not in currently loaded posts, get it via ajax.
         if (!_buf.loadedIdInOrder[id]) {
-            _cl.loadPosts(id);
+            _cl.loadPosts(id, id);
         }
         
-        // prevent auto-load while auto-locating.
         _cl.setActivedPost(id);
         
         // pjax part.
@@ -223,7 +216,7 @@ var handlerList = {
             isUpToDown = false;
         
         // refresh arrows.
-        if (_buf.postIdToIndex[_buf.currentPostId] == 0 && _buf.currentPostId != _cl.getLastPostId()) {
+        if (!_buf.postIdToIndex[_buf.currentPostId] && _buf.currentPostId != _cl.getLastPostId()) {
             _util.getElementById("left").className = "arrow";
             _util.getElementById("top").className = "arrow";
         } else {
@@ -252,8 +245,16 @@ var handlerList = {
         if (!targetPostId) return;
         
         if (!_buf.loadedIdInOrder[targetPostId]) {
-            // preload
-            _cl.loadPosts(targetPostId, _buf.currentPostId);
+            // try preload after 0.8s
+            setTimeout(function(){
+                var newTargetId = _buf.postIdToIndex[_buf.currentPostId];
+                if (isUpToDown) {
+                    newTargetId = _buf.postIdList[newTargetId + 1];
+                } else {
+                    newTargetId = _buf.postIdList[newTargetId - 1];
+                }
+                _cl.loadPosts(newTargetId, isUpToDown ? 0 : _buf.currentPostId);
+            }, 800);
             return;
         }
         
@@ -369,8 +370,37 @@ var handlerList = {
         if (e.state && e.state.postId) {
             controller.locate("article_" + e.state.postId);
         }
-    }
+    },
     
+    showGroup : function(e) {
+        var e = e || window.event,
+            target = e.target || e.srcElement,
+            id = target.id.replace(/t_sideGroup_/, ""),
+            _util = util,
+            targetElem = _util.getElementById("p_sideGroup_" + id),
+            targetParent = _util.getElementById("sideGWrap_" + id);
+        
+        if (_util.getElementById("sidePost_" + buf.currentPostId).parentNode != targetElem) {
+            PageUtil.slideShow(targetElem);
+            
+            // hide the last one, if shown.
+            // bug may exist when slide from top to down fastly.
+            if (document.body.onmouseover) document.body.onmouseover();
+            document.body.onmouseover = function(e) {
+                var e = e || window.event,
+                    target = e.target || e.srcElement;
+                
+                if (!_util.isDomIn(target, targetParent)) {
+                    setTimeout(function(){
+                        if (_util.getElementById("sidePost_" + buf.currentPostId).parentNode != targetElem) {
+                            PageUtil.slideHide(targetElem);
+                        }
+                    }, 200);
+                    document.body.onmouseover = "";
+                }
+            }
+        }
+    }
 };
 
 var controller = {
@@ -417,7 +447,8 @@ var controller = {
         var _hl = handlerList, _util = util;
         
         for (var i in _hl.classEventHandler) {
-            _util.getElementById("mainWrap")[i] = (function(eventName) {
+            
+            _util.addEventListener(_util.getElementById("mainWrap"), i, (function(eventName) {
                 return function(e) {
                     
                     // execute the callback bind to the given element, by className or id.
@@ -427,7 +458,7 @@ var controller = {
                         _ut = util;
                     
                     // check for id first.
-                    var handlers = _hl.idEventHandler[eventName][target.id];                    
+                    var handlers = _hl.idEventHandler[eventName] && _hl.idEventHandler[eventName][target.id];                    
                     for (var i in handlers) {
                         if (handlers[i] instanceof Function) {
                             handlers[i][e];
@@ -438,7 +469,7 @@ var controller = {
                     var classNameList = target.className.split(/\s+/);
                     for (var i = 0, len = classNameList.length; i < len; ++i) {
                         
-                        handlers = _hl.classEventHandler[eventName][classNameList[i]];
+                        handlers = _hl.classEventHandler[eventName] && _hl.classEventHandler[eventName][classNameList[i]];
                         for (var j in handlers) {
                             if (handlers[j] instanceof Function) {
                                 handlers[j](e);
@@ -446,7 +477,7 @@ var controller = {
                         }
                     }
                 }
-            })(i);
+            })(i));
         }
     },
     
@@ -475,6 +506,7 @@ var controller = {
         
         self.addEventListenerByClassName("article_title_link", "onclick", _hl.locatePost);
         self.addEventListenerByClassName("side_post_link", "onclick", _hl.locatePost);
+        self.addEventListenerByClassName("side_menu_group", "onmouseover", _hl.showGroup);
         
         _util.addEventListener(window, "scroll", _hl.locatePostInScroll);
         _util.addEventListener(window, "resize", _hl.resetBottomFlag);
@@ -585,7 +617,7 @@ var controller = {
             _buf = buf,
             posts = _util.getElementsByClassName("side_post_link", "a", _util.getElementById("sidebar"));
         
-        var id;
+        var id, firstLoaded = 0;
         for (var i = 0, len = posts.length; i < len; ++i) {
             // match returns an array...
             id = posts[i].id.match(/\d+/) + "";
@@ -594,11 +626,11 @@ var controller = {
             
             if (_util.getElementById("article_" + id)) {
                 _buf.loadedIdInOrder[id] = 1;
+                if (!firstLoaded) firstLoaded = id;
             }
         }
         
-        // set the first post as the current actived one.
-        controller.setActivedPost(_buf.postIdList[0]);
+        controller.setActivedPost(firstLoaded);
     },
     
     getFirstPostId : function() {
@@ -707,11 +739,7 @@ var controller = {
                     } else {
                         articleWrap.insertBefore(docFrag, _util.getElementById("article_" + targetPostId));
                     }
-                    if (!locateTo) {
-                        _cl.locate("article_" + postId);
-                    } else {
-                        _cl.locate("article_" + locateTo);
-                    }
+                    locateTo && _cl.locate("article_" + locateTo);
                 }, 210);
             }
         );
@@ -746,9 +774,9 @@ var controller = {
         sidePost && (sidePost.className = "side_menu_group active");
         
         if (lastParentId && lastParentId != newParentId) {
-            PageUtil.toggleSlide(document.getElementById("p_sideGroup_" + lastParentId));
-            PageUtil.toggleSlide(document.getElementById("p_sideGroup_" + newParentId));
+            PageUtil.slideHide(document.getElementById("p_sideGroup_" + lastParentId));
         }
+        PageUtil.slideShow(document.getElementById("p_sideGroup_" + newParentId));
         
         // update buffer
         _buf.currentPostId = postId;
@@ -782,15 +810,21 @@ var controller = {
 
 return self = {
     addEventListenerByClassName : function(className, eventName, callback) {
-        var hl = handlerList.classEventHandler[eventName][className];
+        var _hl = handlerList.classEventHandler;
+        if (!_hl[eventName]) _hl[eventName] = {};
         
-        !hl && (hl = handlerList.classEventHandler[eventName][className] = []);
-        handlerList.classEventHandler[eventName][className].push(callback);
+        var hl = _hl[eventName][className];
+        
+        !hl && (hl = _hl[eventName][className] = []);
+        hl.push(callback);
     },
     addEventListenerById : function(id, eventName, callback) {
-        var hl = handlerList.idEventHandler[eventName][id];
+        var _hl = handlerList.idEventHandler;
+        if (!_hl[eventName]) _hl[eventName] = {};
         
-        !hl && (hl = handlerList.classEventHandler[eventName][id] = []);
+        var hl = _hl[eventName][className];
+        
+        !hl && (hl = _hl[className] = []);
         hl.push(callback);
     },
     
@@ -828,15 +862,20 @@ return self = {
             _util.getElementById("copyRight").className = _util.getElementById("copyRight").className + " active";
             setTimeout(function(){
                 _util.getElementById("content").className = _util.getElementById("content").className + " active";
+                // init the bottom flag for slide.
+                handlerList.resetBottomFlag();
             }, 500);
             setTimeout(function(){
-                _util.getElementById("sidebar").className = _util.getElementById("sidebar").className + " active";
+                _util.getElementById("sidebar").className = _util.getElementById("sidebar").className + " active";                
+                handlerList.locatePostInScroll();
+                // init existing post list via className.
+                controller.initPostList();
             }, 800);
+            /*
             setTimeout(function(){
                 _util.getElementById("headerBicycle").className = _util.getElementById("headerBicycle").className + " active";
             }, 1100);
             
-            /*
             Cycler.add("birds_2", Cycler.handler.slide(-0.1));
             Cycler.add("birds_1", Cycler.handler.slide(-0.08));
             Cycler.add("mountain_1", Cycler.handler.slide(-0.03));
@@ -885,32 +924,17 @@ return self = {
         }, callback, 0);
         */
         
-        controller.initEventHandlers();
         controller.initEvents();
+        controller.initEventHandlers();
         
         // init bind on scroll
         ScrollUtil.init();
         ScrollUtil.bindOnScroll(util.getElementById("sidebar"), function(){
-            util.getElementById("sidebar").style.cssText = 'transition:none;';
-            setTimeout(function(){
-                util.getElementById("sidebar").style.cssText = 'transition:none;position: fixed;right: 10%;width: 28.2%;top: 0;';
-            }, 0);
+            util.getElementById("sidebar").style.cssText = 'position: fixed;right: 10%;width: 28.2%;top: 0;';
         }, function(){
-            util.getElementById("sidebar").style.cssText = 'transition:none;';
-            setTimeout(function(){
-                util.getElementById("sidebar").style.cssText = '';
-            }, 0);
+            util.getElementById("sidebar").style.cssText = '';
         });
-        
-        // init existing post list via className.
-        controller.initPostList();
-        
-        handlerList.locatePostInScroll();
-        // init the bottom flag for slide.
-        handlerList.resetBottomFlag();
-    },
-    
-    buf : buf
+    }
 };
 })();
 

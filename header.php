@@ -54,7 +54,7 @@
 ?>"><?php echo $talkingContent; ?></a>
             <div class="talking_stuff">
                 <div class="talking_weather"></div>
-                <img id="signature" alt="<?php _e("扣钉骑士", yarmyarch) ?>">
+                <a href="http://yarmyarch.com/feed/" target="_blank" title="<?php _e("订阅扣钉骑士的骑行日记", "yarmyarch"); ?>"><img id="signature" alt="<?php _e("扣钉骑士", yarmyarch) ?>"></a>
             </div>
         </div>
         <?php wp_nav_menu( array( 'container_class' => 'nav', 'theme_location' => 'primary', "before" => "<div class='menu-bg'></div>" ) ); ?>

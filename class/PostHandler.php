@@ -60,7 +60,7 @@ class PostHandler {
         global $globalUtils;
         
         if (!$categoryName) {
-            $posts = get_posts(array('category__not_in' => array($globalUtils->getCategoryBySlug("talking")->term_id)));
+            $posts = get_posts();
         } else {
             $posts = $globalUtils->getPostsByCategoryName($categoryName);
         }
@@ -82,7 +82,7 @@ class PostHandler {
                 $post->link = get_permalink($post->ID);
             } else {
                 $category = $globalUtils->getPostCategory($post->ID);
-                $post->link = get_bloginfo("url")."/".$category->slug."?p=".$post->ID;
+                $post->link = get_bloginfo("url")."/".$category->slug."?pid=".$post->ID;
             }
             
             // load limited post only.

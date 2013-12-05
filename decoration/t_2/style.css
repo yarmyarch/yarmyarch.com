@@ -1,6 +1,7 @@
 #Decoration { 
     position:fixed; width:100%; 
     background-image: linear-gradient(#5BF, #FFF 60%);
+    -webkit-backface-visibility: hidden;
 }
 
 /* ### page modification ### */

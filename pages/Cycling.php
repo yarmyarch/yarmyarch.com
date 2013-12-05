@@ -14,7 +14,7 @@ get_header();?>
         global $curCategory;
         
         $curCategory = "cycling";
-        $postId = isset($_GET["p"]) ? preg_replace("/\D/", "", $_GET["p"]) : -1;
+        $postId = isset($_GET["pid"]) ? preg_replace("/\D/", "", $_GET["pid"]) : -1;
 
         $postInfo = $postHandler->load($curCategory, $postId);
         echo $postInfo["contents"];

@@ -5,6 +5,7 @@
  */
 ?>
 <div class="sidebar" id="sidebar">
+    <div class="sidebar_content">
     <?php
     // them by categories->monthes->posts.
     
@@ -18,7 +19,7 @@
         // current post, if post id then given post, or the first post in each group.
         preg_match("/\d{4}-\d{2}/", $post->post_date, $group);
         $group = $group[0];
-        $category = $globalUtils->getPostCategory($postId);
+        $category = $globalUtils->getPostCategory($post->ID);
         if (is_array($category)) $category = $category[0];
         
         if (!isset($layeredMenu[$category->slug])) {
@@ -31,7 +32,7 @@
         }
         if (!isset($layeredMenu[$category->slug]["groups"][$group])) {
             $layeredMenu[$category->slug]["groups"][$group] = array(
-                "id" => "sideGroup_".$group,
+                "id" => $group."_".$category->cat_ID,
                 "title" => $group,
                 // page to the first post of this group.
                 "link" => $post->link,
@@ -49,19 +50,21 @@
     foreach ($layeredMenu as $category) {
         
         ?>
-        <a href="<?php echo $category["link"]; ?>" onclick="javascript:return false;" class="side_menu_category" id="<?php echo $category["id"]; ?>" title="<?php echo $category["title"]; ?>"><?php echo $category["title"]; ?></a>
+        <a href="<?php echo $category["link"]; ?>" class="side_menu_category" id="<?php echo $category["id"]; ?>" title="<?php echo $category["title"]; ?>"><?php echo $category["title"]; ?></a>
         <?php
-        foreach($category["groups"] as $group) {
+        foreach($category["groups"] as $groupId=>$group) {
             ?>
-            <a href="<?php echo $group["link"]; ?>" onclick="javascript:return false;" class="side_menu_group" id="t_<?php echo $group["id"]; ?>" title="<?php echo $group["title"]; ?>"><?php echo $group["title"]; ?></a>
-            <div class="side_menu_posts" id="p_<?php echo $group["id"]; ?>">
-            <?php
-            foreach($group["posts"] as $post) {
-                ?>
-                <a id="<?php echo $post["id"]; ?>" href="<?php echo $post["link"]; ?>" onclick="javascript:return false;" title="<?php echo $post["title"] ?>" class="side_post_link"><?php echo $post["title"] ?></a>
+            <div class="side_group_wrap" id="sideGWrap_<?php echo $group["id"]; ?>">
+                <a href="<?php echo $group["link"]; ?>" onclick="javascript:return false;" class="side_menu_group" id="t_sideGroup_<?php echo $group["id"]; ?>" title="<?php echo $group["title"]; ?>"><?php echo $group["title"]; ?></a>
+                <div class="side_menu_posts" id="p_sideGroup_<?php echo $group["id"]; ?>" style="height:0;overflow:hidden;">
                 <?php
-            }
-            ?>
+                foreach($group["posts"] as $post) {
+                    ?>
+                    <a id="<?php echo $post["id"]; ?>" href="<?php echo $post["link"]; ?>" onclick="javascript:return false;" title="<?php echo $post["title"] ?>" class="side_post_link"><?php echo $post["title"] ?></a>
+                    <?php
+                }
+                ?>
+                </div>
             </div>
             <?php
         }
@@ -73,10 +76,10 @@
     <span class="open_api_login oal_sina" name="openApiLogin" id="openApiLogin_sina"></span>
     <span class="open_api_login oal_renren" name="openApiLogin" id="openApiLogin_renren"></span>
     -->
-    
+    </div>
     <?php if ( is_active_sidebar( 'sidebar-1' ) ) : ?>
-        <div id="secondary" class="widget-area">
-            <?php dynamic_sidebar( 'sidebar-1' ); ?>
-        </div>
+    <div id="secondary" class="widget-area sidebar_content">
+        <?php dynamic_sidebar( 'sidebar-1' ); ?>
+    </div>
     <?php endif; ?>
 </div>
