@@ -719,17 +719,17 @@ var controller = {
                 
                 _cl.hideLoading();
                 
-                for (var i in contentList) {
-                    if (!_buf.loadedIdInOrder[i]) {
-                        html.push(contentList[i]);
-                        _buf.loadedIdInOrder[i] = true;
+                for (var i in _buf.postIdList) {
+                    if (contentList[_buf.postIdList[i]]) {
+                        html.push(contentList[_buf.postIdList[i]]);
+                        _buf.loadedIdInOrder[_buf.postIdList[i]] = true;
                     }
                 }
                 
                 html = html.join("");
                 tmpDiv.innerHTML = html;
                 for (var i = 0, len = tmpDiv.childNodes.length; i < len; ++i) {
-                    docFrag.appendChild(tmpDiv.childNodes[i]);
+                    docFrag.appendChild(tmpDiv.childNodes[0]);
                 }
                 delete tmpDiv;
                 

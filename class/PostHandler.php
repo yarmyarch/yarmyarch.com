@@ -60,7 +60,7 @@ class PostHandler {
         global $globalUtils;
         
         if (!$categoryName) {
-            $posts = get_posts();
+            $posts = get_posts(array('category__not_in' => array($globalUtils->getCategoryBySlug("talking")->term_id)));
         } else {
             $posts = $globalUtils->getPostsByCategoryName($categoryName);
         }
