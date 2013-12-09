@@ -720,7 +720,7 @@ var controller = {
                 _cl.hideLoading();
                 
                 for (var i in _buf.postIdList) {
-                    if (contentList[_buf.postIdList[i]]) {
+                    if (contentList[_buf.postIdList[i]] && !_buf.loadedIdInOrder[_buf.postIdList[i]]) {
                         html.push(contentList[_buf.postIdList[i]]);
                         _buf.loadedIdInOrder[_buf.postIdList[i]] = true;
                     }
