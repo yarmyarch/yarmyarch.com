@@ -64,6 +64,14 @@ var User = (function(){
             _buf.localStorage[_lc.motherFuckerId] = mf_tick;
             _buf.localStorage[_lc.dadFuckerId] = df_tick
             _buf.localStorage["yar_login_faild"] = 0;
+        },
+        
+        getId : function() {
+            return buf.localStorage[LC.dadFuckerId];
+        },
+        
+        getMfId : function() {
+            return buf.localStorage[LC.motherFuckerId];
         }
     }
     

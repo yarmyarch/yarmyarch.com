@@ -400,6 +400,40 @@ var handlerList = {
                 }
             }
         }
+    },
+    
+    up : function(e) {
+        var e = e || window.event,
+            target = e.target || e.srcElement,
+            id = target.id.match(/\d+/)[0],
+            idTag = target.id.match(/_(\w+)_/)[1];
+        
+        if (target.parentNode.className.match(/voted/)) return;
+        
+        util.get(LC.AJAX_LINK 
+            + "?a=vote"
+            + "&action=up"
+            + "&target=" + idTag
+            + "&aid=" + id
+            + "&uid=" + User.getMfId(),
+            controller.voteCallback);
+    },
+    
+    down : function(e) {
+        var e = e || window.event,
+            target = e.target || e.srcElement,
+            id = target.id.match(/\d+/)[0],
+            idTag = target.id.match(/_(\w+)_/)[1];
+        
+        if (target.parentNode.className.match(/voted/)) return;
+        
+        util.get(LC.AJAX_LINK 
+            + "?a=vote"
+            + "&action=down"
+            + "&target=" + idTag
+            + "&aid=" + id
+            + "&uid=" + User.getMfId(),
+            controller.voteCallback);
     }
 };
 
@@ -507,6 +541,10 @@ var controller = {
         self.addEventListenerByClassName("article_title_link", "onclick", _hl.locatePost);
         self.addEventListenerByClassName("side_post_link", "onclick", _hl.locatePost);
         self.addEventListenerByClassName("side_menu_group", "onmouseover", _hl.showGroup);
+        
+        // up/down
+        self.addEventListenerByClassName("action_up", "onclick", _hl.up);
+        self.addEventListenerByClassName("action_down", "onclick", _hl.down);
         
         _util.addEventListener(window, "scroll", _hl.locatePostInScroll);
         _util.addEventListener(window, "resize", _hl.resetBottomFlag);
@@ -805,6 +843,22 @@ var controller = {
     
     hideLoading : function() {
         util.getElementById("loading").className = "loading in_article";
+    },
+    
+    voteCallback : function(response) {
+        // succeed.
+        if (!response.status) {
+            var action = response.action,
+                counter, counterHtml, counterElem;
+            // upper case to the first char.
+            action = action.charAt(0).toUpperCase().concat(action.slice(1));
+            counterElem = document.getElementById("articleAction" + action + "_" + response.target + "_" + response.id);
+            counterHtml = counterElem.innerHTML;
+            counterElem.innerHTML = counterHtml.replace(/\s*\(\d+\)/g, "") + "(" + response.count + ")";
+            
+            counterElem.className = counterElem.className + " active";
+            counterElem.parentNode.className = counterElem.parentNode.className + " voted";
+        }
     }
 };
 

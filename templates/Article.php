@@ -40,7 +40,7 @@
         <?php
             // two params required by the template.
             $actionMeta = get_post_meta;
-            $actionId = $postId;
+            $actionId = "p_".$postId;
             include("CommonActions.php");
         ?>
         <div class="loading" id="commentLoading_<?php echo $postId; ?>"></div>

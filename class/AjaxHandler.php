@@ -230,5 +230,71 @@ class YarAjaxHandler {
         
         echo json_encode($result);
     }
+    
+    /**
+     * $request
+     *  action
+     *  target
+     *  aid
+     *  uid
+     */
+    public function vote($request) {
+        $target = array(
+            "p" => post,
+            "c" => comment
+        );
+        $action = array(
+            "up" => "up",
+            "down" => "down"
+        );
+        
+        $result = array(
+            "status" => 1
+        );
+        
+        $target = $target[$request["target"]];
+        $action = $action[$request["action"]];
+        $id = $request["aid"];
+        $uid = $request["uid"];
+        
+        if (!$target || !$action || !$id || !$uid) {
+            echo json_encode($result);
+            exit(0);
+        }
+        
+        $get = "get_".$target."_meta";
+        $update = "update_".$target."_meta";
+        $delete = "delete_".$target."_meta";
+        
+        $upList = $get($id, "upUserList", 1);
+        $downList = $get($id, "downUserList", 1);
+        $upList = $upList == null ? array() : $upList;
+        $downList = $downList == null ? array() : $downList;
+        
+        $userList = array_merge($upList, $downList);
+        $count = $get($id, $request["action"], 1);
+        
+        // if the user is in
+        if (in_array($uid, $userList)) {
+            echo json_encode($result);
+            exit(0);
+        }
+        
+        $userList = ($action == "up" ? $upList : $downList);
+        $userList[] = $uid;
+        
+        $update($id, $action."UserList", $userList);
+        $update($id, $action, $count + 1);
+        
+        $result = array(
+            "status" => 0,
+            "id" => $id,
+            "action" => $action,
+            "target" => $request["target"],
+            "count" => $count + 1
+        );
+        
+        echo json_encode($result);
+    }
 }
 ?>

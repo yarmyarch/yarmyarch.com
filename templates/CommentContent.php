@@ -32,7 +32,7 @@
                 echo "<b>".$authorNameWithLink."</b> @ ".apply_filters( 'get_comment_date', $comment->comment_date, $comment );
                 
                 $actionMeta = get_comment_meta;
-                $actionId = $comment_ID;
+                $actionId = "c_".$comment->comment_ID;
                 include(dirname(__FILE__)."/CommonActions.php");
             ?>
         </div>

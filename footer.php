@@ -1,8 +1,7 @@
     <div class="clear" id="bottomClear"></div>
 </div>
 <div id="copyRight">
-    ☺ 2013. All rights reserved. By yarmyarch@live.cn<br>
-    Nothing else.
+    ☺ 2013. All rights reserved. By <a class="mailto" href="mailto:yarmyarch@live.cn">yarmyarch@live.cn</a> Nothing else.
 </div>
 <div class="loading" id="loading"></div>
 <div class="arrow_wrap">
