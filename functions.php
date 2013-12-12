@@ -41,6 +41,5 @@ $yarController = new YarController();
 
 // TODO:
 // QUOAT
-// oo/xx action
 
 ?>

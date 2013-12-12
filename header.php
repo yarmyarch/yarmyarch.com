@@ -13,7 +13,7 @@
 	// Add the blog name.
 	bloginfo( 'name' );
     ?></title>
-    <meta name="keywords" content="<?php _e("Luo Yujia, 骑行, 自由职业者, web前端, yarmyarch, 木之夏", "yarmyarch"); ?>" />
+    <meta name="keywords" content="<?php _e("Luo Yujia, 骑行, 扣钉骑士, 罗誉家, 自由职业者, web前端, yarmyarch, 木之夏", "yarmyarch"); ?>" />
     <meta name="description" content="<?php _e("竹杖芒鞋轻胜马，一蓑烟雨任平生——扣钉骑士", "yarmyarch"); ?>" />
     <meta name="author" content="<?php _e("扣钉骑士, yarmyarch@live.cn", "yarmyarch"); ?>" />
     

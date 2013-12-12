@@ -113,6 +113,9 @@ var handlerList = {
                 
                 // hide the user info input.
                 _util.slideHide(_util.getElementById("userInfo_" + id));
+                
+                // clear the input.
+                valueTarget.value = "";
             }
         );
     },

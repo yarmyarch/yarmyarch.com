@@ -44,5 +44,6 @@
             include("CommonActions.php");
         ?>
         <div class="loading" id="commentLoading_<?php echo $postId; ?>"></div>
+        <div class="loading" style="display:none;"><?php _e("by 扣钉骑士 - WEB前端工程师 自由职业者 罗誉家, yarmyarch@live.cn", "yarmyarch"); ?></div>
     </div>
 </div>
