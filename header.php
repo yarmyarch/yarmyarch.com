@@ -47,7 +47,7 @@
         <div class="head_title"><?php bloginfo( 'name' ); wp_title( '|', true, 'left' ); ?></div>
         <div class="talking_wrap" id="headerTalking">
             <a class="talking_content" href="<?php echo "/talking"; ?>" title="<?php 
-    $post = $globalUtils->getPostsByCategoryName("talking", 1);
+    $post = $globalUtils->getPostsByCategoryName("talking");
     $post = $post[0];
     $talkingContent = str_replace(']]>', ']]&gt;', apply_filters('the_content', $post->post_content));
     echo $talkingContent;

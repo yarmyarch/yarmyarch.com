@@ -14,6 +14,8 @@
     $downList = $actionMeta($id, "downUserList", 1);
     $upList = ($upList == null ? array() : $upList);
     $downList = ($downList == null ? array() : $downList);
+    $upVoted = 0;
+    $downVoted = 0;
     
     if (in_array($uid, $upList)) {
         echo " voted";
@@ -26,6 +28,7 @@
 ?>">
     <div class="article_action action_down<?php if ($downVoted) echo " active"; ?>" title="<?php _e("去他妈个蛋", "yarmyarch"); ?>" id="articleActionDown_<?php echo $actionId; ?>">
     <?php 
+    
         _e("踩", "yarmyarch"); 
         $actionCount = $actionMeta($id, "down", true);
         if ($actionCount != 0){
