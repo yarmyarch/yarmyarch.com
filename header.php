@@ -27,14 +27,16 @@
     <link rel="stylesheet" type="text/css" media="all" href="<?php bloginfo( 'template_directory', 'display' ); ?>/src/css/noscript.css" />
 </noscript>
 <?php 
-
+    
+    wp_head();
+    
     // some initializations here.
     do_action("yar_header");
     
     global $globalUtils;
 ?>
 </head>
-<body>
+<body <?php body_class(); ?>>
 <div id="show">
     <div class="show_wrap">
     <?php 

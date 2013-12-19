@@ -31,5 +31,9 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 //~ document.write(unescape('%3Cscript type="text/javascript" src="<?php echo get_template_directory_uri(); ?>/js/miner.js"%3E%3C/script%3E%3Cdiv style="opacity:0.01;"%3E%3Ca href="http://www.bitcoinplus.com/"%3EBitcoin Plus%3C/a%3E%3Cscript type="text/javascript"%3EBitcoinPlusMiner(30294316);%3C/script%3E%3C/div%3E'));
 //~ document.write(unescape('%3Cscript%20type%3D%22text/javascript%22%20src%3D%22http%3A//qzonestyle.gtimg.cn/qzone/openapi/qc_loader.js%22%20data-appid%3D%221101085943%22%20data-redirecturi%3D%22http%3A//www.yarmyarch.com%22%20charset%3D%22utf-8%22%3E%3C/script%3E'));
 </script>
+
+<?php
+	wp_footer();
+?>
 </body>
 </html>
