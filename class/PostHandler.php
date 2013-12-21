@@ -78,12 +78,7 @@ class PostHandler {
         foreach($posts as $post) {
             
             // set post link.
-            if (!$categoryName) {
-                $post->link = get_permalink($post->ID);
-            } else {
-                $category = $globalUtils->getPostCategory($post->ID);
-                $post->link = get_bloginfo("url")."/".$category->slug."?pid=".$post->ID;
-            }
+            $post->link = get_permalink($post->ID);
             
             // load limited post only.
             if ($postCount >= $yarConfig["POST_PER_REQ"]) continue;

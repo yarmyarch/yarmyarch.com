@@ -7,11 +7,11 @@
 
 <div class="<?php
     $uid = session_id();
-    preg_match("/\d+/", $actionId, $id);
-    $id = $id[0];
+    preg_match("/\d+/", $actionId, $curid);
+    $curid = $curid[0];
     
-    $upList = $actionMeta($id, "upUserList", 1);
-    $downList = $actionMeta($id, "downUserList", 1);
+    $upList = $actionMeta($curid, "upUserList", 1);
+    $downList = $actionMeta($curid, "downUserList", 1);
     $upList = ($upList == null ? array() : $upList);
     $downList = ($downList == null ? array() : $downList);
     $upVoted = 0;
@@ -30,7 +30,7 @@
     <?php 
     
         _e("踩", "yarmyarch"); 
-        $actionCount = $actionMeta($id, "down", true);
+        $actionCount = $actionMeta($curid, "down", true);
         if ($actionCount != 0){
             echo("({$actionCount})");
         }
@@ -38,7 +38,7 @@
     <div class="article_action action_up<?php if ($upVoted) echo " active"; ?>" title=<?php _e("好顶赞", "yarmyarch"); ?> id="articleActionUp_<?php echo $actionId; ?>">
     <?php 
         _e("顶", "yarmyarch"); 
-        $actionCount = $actionMeta($id, "up", true);
+        $actionCount = $actionMeta($curid, "up", true);
         if ($actionCount != 0){
             echo("({$actionCount})");
         }
