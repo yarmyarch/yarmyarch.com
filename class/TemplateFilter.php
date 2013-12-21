@@ -54,6 +54,9 @@ class TemplateFilter {
         
         // ignore the email if it's added as a sessionid.
         add_filter("author_email", array(&$this, "ignoreSessionEmail"), 0, 3);
+        
+        // the tool bar
+        add_filter('show_admin_bar', '__return_false');
     }
     
     public function headerStuffAction() {
