@@ -26,7 +26,7 @@
             $layeredMenu[$category->slug] = array(
                 "id" => "sideCategory_".$category->slug,
                 "title" => $category->name,
-                "link" => get_bloginfo("url")."/".$category->slug,
+                "link" => get_category_link($category->cat_ID),
                 "groups" => array()
             );
         }

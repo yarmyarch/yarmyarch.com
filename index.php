@@ -12,7 +12,8 @@ get_header();?>
         $postId = $wp_query->is_home ? -1 : $postId;
         $postId = $wp_query->is_page ? -1 : $postId;
         
-        $postInfo = $postHandler->load("", $postId);
+        $postInfo = $postHandler->load($wp_query->query["category_name"], $postId);
+        
         echo $postInfo["contents"];
         // posts for sidebar
         $posts = $postInfo["posts"];
