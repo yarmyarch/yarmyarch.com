@@ -200,7 +200,9 @@ var handlerList = {
         
         // if it's not in currently loaded posts, get it via ajax.
         if (!_buf.loadedIdInOrder[id]) {
-            _cl.loadPosts(id, id);
+            var prevUnloaded = _buf.postIdList[_buf.postIdToIndex[id] - 1];
+            _buf.loadedIdInOrder[prevUnloaded] && (prevUnloaded = id);
+            _cl.loadPosts(prevUnloaded, id);
         }
         
         _cl.setActivedPost(id);

@@ -7,12 +7,14 @@ get_header();?>
         // should generate posts in all categories with ajax, and a main picture at the home page.
         global $postHandler;
         global $wp_query;
+        global $curCategory;
         
+        $curCategory = $wp_query->query["category_name"];
         $postId = $wp_query->post->ID;
         $postId = $wp_query->is_home ? -1 : $postId;
         $postId = $wp_query->is_page ? -1 : $postId;
         
-        $postInfo = $postHandler->load($wp_query->query["category_name"], $postId);
+        $postInfo = $postHandler->load($curCategory, $postId);
         
         echo $postInfo["contents"];
         // posts for sidebar
