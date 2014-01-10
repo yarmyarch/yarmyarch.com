@@ -144,7 +144,7 @@ applet {
 .article-wrap { 
     float:left;
     width:64.75%;
-    z-index:1;
+    z-index:2;
     position:relative;
 }
 .article {
@@ -814,7 +814,6 @@ applet {
     border-bottom-width: 0px;
     border-bottom-style: solid;
     border-bottom-color: #999;
-    right: 1px;
     z-index: -1;
     
     -webkit-transform: rotate(-45deg);

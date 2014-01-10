@@ -35,5 +35,6 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 <?php
 	wp_footer();
 ?>
+
 </body>
 </html>
