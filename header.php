@@ -33,7 +33,7 @@
         $description = __("竹杖芒鞋轻胜马，一蓑烟雨任平生——扣钉骑士", "yarmyarch");
     }
     if (!$keywords) {
-        $keywords = __("骑行, 扣钉骑士, web前端, yarmyarch", "yarmyarch");
+        $keywords = __("骑行, 扣钉骑士, web前端, yarmyarch, Luo Yujia", "yarmyarch");
     }
     if (isset($wp_query->query["category_name"])) {
         $keywords .= ", ".$wp_query->queried_object->name.", ".$wp_query->queried_object->slug;
