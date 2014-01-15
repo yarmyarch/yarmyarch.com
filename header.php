@@ -21,7 +21,7 @@
         $description = $wp_query->queried_object->category_description;
     } elseif ($postId = $wp_query->query["p"]) {
         $description = $wp_query->queried_object->post_excerpt;
-        if (!$description) $description = substr(strip_tags($wp_query->queried_object->post_content),0,220);
+        if (!$description) $description = mb_substr(strip_tags($wp_query->queried_object->post_content),0,220);
         
         // generate tags
         $tags = wp_get_post_tags($postId);
