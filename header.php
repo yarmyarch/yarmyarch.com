@@ -12,9 +12,35 @@
     
 	// Add the blog name.
 	bloginfo( 'name' );
-    ?></title>
-    <meta name="keywords" content="<?php _e("Luo Yujia, 骑行, 扣钉骑士, 罗誉家, 自由职业者, web前端, yarmyarch, 木之夏", "yarmyarch"); ?>" />
-    <meta name="description" content="<?php _e("竹杖芒鞋轻胜马，一蓑烟雨任平生——扣钉骑士", "yarmyarch"); ?>" />
+?></title>
+<?php
+    // generate keywords and descriptions if it's a page for post/category.
+    global $wp_query;
+    
+    if (isset($wp_query->query["category_name"])) {
+        $description = $wp_query->queried_object->category_description;
+    } elseif ($postId = $wp_query->query["p"]) {
+        $description = $wp_query->queried_object->post_excerpt;
+        if (!$description) $description = substr(strip_tags($wp_query->queried_object->post_content),0,220);
+        
+        // generate tags
+        $tags = wp_get_post_tags($postId);
+        foreach ($tags as $tag ) {
+            $keywords = $keywords . $tag->name . ", ";
+        }
+    }
+    if (!$description) {
+        $description = __("竹杖芒鞋轻胜马，一蓑烟雨任平生——扣钉骑士", "yarmyarch");
+    }
+    if (!$keywords) {
+        $keywords = __("骑行, 扣钉骑士, web前端, yarmyarch", "yarmyarch");
+    }
+    if (isset($wp_query->query["category_name"])) {
+        $keywords .= ", ".$wp_query->queried_object->name.", ".$wp_query->queried_object->slug;
+    }
+?>
+    <meta name="keywords" content="<?php echo $keywords; ?>" />
+    <meta name="description" content="<?php echo $description; ?>" />
     <meta name="author" content="<?php _e("扣钉骑士, yarmyarch@live.cn", "yarmyarch"); ?>" />
     
     <meta property="qc:admins" content="364547601251123063757" />
