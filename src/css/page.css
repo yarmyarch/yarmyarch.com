@@ -800,7 +800,7 @@ applet {
     box-sizing:content-box;
 }
 .side_menu_group:hover:after, .side_menu_group.active:after {
-    
+    right:0px;
     border-bottom-width:12px;
     border-bottom-color:#666;
 }
